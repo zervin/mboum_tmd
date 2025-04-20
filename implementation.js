@@ -1,17 +1,12 @@
 (function() {
   // Main function definition at top level
-  function mboum_financial_data(params, userSettings) {
+  function mboum_financial_data(params) {
     try {
       // Extract parameters
       const { endpoint, params: endpointParams } = params;
       
-      // Check for API key
-      const apiKey = userSettings && userSettings.mboumApiKey;
-      if (!apiKey) {
-        return `<div style="font-family: Arial, sans-serif; color: red; padding: 15px;">
-          <strong>Error:</strong> MBOUM API key is required. Please set it in the user settings.
-        </div>`;
-      }
+      // Hardcoded API key - replace with your actual API key
+      const apiKey = "demo"; // Replace with your actual MBOUM API key
 
       // Validate endpoint
       if (!endpoint) {
