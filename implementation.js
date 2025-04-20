@@ -82,8 +82,95 @@ async function mboum_financial_data(params) {
     const apiEndpoint = endpointMap[endpoint];
     if (!apiEndpoint) {
       // Return error object directly for validation errors
-      return { error: true, message: `Invalid endpoint: ${endpoint}` };
+      return { error: true, message: `Invalid endpoint selected: ${endpoint}` };
     }
+
+    // --- Parameter Validation --- 
+    const requiredParamsMap = {
+        search: ['search'],
+        movers: ['type'],
+        screener_v1: ['list'],
+        // insider_trades_v1: [], // No required params
+        // news_v1: [],
+        search_v2: ['search'],
+        movers_v2: ['change_type'],
+        tickers_v2: ['type'],
+        // market_info_v2: [],
+        screener_v2: ['metricType', 'filter'],
+        // news_v2: [],
+        quote_realtime: ['ticker', 'type'],
+        quotes: ['ticker'],
+        history: ['ticker', 'interval'],
+        modules: ['ticker', 'module'],
+        stock_earnings_v1: ['ticker'], // Based on original mapping, assuming ticker needed
+        stock_dividends_v1: ['ticker'],// Based on original mapping, assuming ticker needed
+        analyst_ratings_v1: ['ticker'],
+        ticker_summary_v2: ['ticker', 'type'],
+        price_targets_v2: ['ticker'],
+        financials_v2: ['ticker'],
+        revenue_v2: ['ticker'],
+        short_interest_v2: ['ticker', 'type'],
+        institutional_holdings_v2: ['ticker', 'type'],
+        sec_filings_v2: ['ticker', 'type'],
+        historical_v2: ['ticker', 'type'],
+        options: ['ticker'],
+        unusual_options_activity_v1: ['type'],
+        iv_rank_percentile_v1: ['type'],
+        iv_change_v1: ['type'],
+        options_most_active_v1: ['type'],
+        options_highest_iv_v1: ['sort'],
+        options_flow_v1: ['type'],
+        options_v2: ['ticker', 'type'],
+        // calendar_earnings_v1: [],
+        // calendar_dividends_v1: [],
+        // calendar_economic_events_v1: [],
+        // calendar_ipo_v1: [],
+        // calendar_public_offerings_v1: [],
+        // calendar_earnings_v2: requires 'days' OR ('start_date' AND 'end_date') - Special Case handled below
+        // calendar_dividends_v2: [],
+        indicator_sma_v1: ['ticker', 'interval', 'series_type', 'time_period'],
+        indicator_rsi_v1: ['ticker', 'interval', 'series_type', 'time_period'],
+        indicator_macd_v1: ['ticker', 'interval', 'series_type'],
+        indicator_cci_v1: ['ticker', 'interval', 'series_type'],
+        indicator_adx_v1: ['ticker', 'interval', 'series_type', 'time_period'],
+        indicator_ema_v1: ['ticker', 'interval', 'series_type', 'time_period'],
+        indicator_stoch_v1: ['ticker', 'interval'],
+        indicator_adosc_v1: ['ticker', 'interval', 'series_type'],
+        indicator_ad_v1: ['ticker', 'interval'],
+        crypto_profile_v1: ['key'],
+        crypto_holders_v1: ['key'],
+        crypto_quotes_v1: ['key'],
+        // crypto_coins_v1: [],
+        crypto_modules_v1: ['module'],
+    };
+
+    const requiredParams = requiredParamsMap[endpoint] || [];
+    const missingParams = [];
+
+    if (endpoint === 'calendar_earnings_v2') {
+        // Special case: requires 'days' OR ('start_date' AND 'end_date')
+        const hasDays = endpointParams && endpointParams.hasOwnProperty('days') && endpointParams.days;
+        const hasDateRange = endpointParams && endpointParams.hasOwnProperty('start_date') && endpointParams.start_date && 
+                             endpointParams.hasOwnProperty('end_date') && endpointParams.end_date;
+        if (!hasDays && !hasDateRange) {
+             missingParams.push("'days' or ('start_date' and 'end_date')");
+        }
+    } else {
+        // Standard case
+        requiredParams.forEach(param => {
+          if (!endpointParams || !endpointParams.hasOwnProperty(param) || !endpointParams[param]) {
+            missingParams.push(param);
+          }
+        });
+    }
+
+    if (missingParams.length > 0) {
+      return { 
+          error: true, 
+          message: `Missing required parameter(s) for endpoint '${endpoint}': ${missingParams.join(', ')}` 
+      };
+    }
+    // --- End Parameter Validation ---
 
     const url = new URL(`https://api.mboum.com${apiEndpoint}`);
     if (endpointParams) {
