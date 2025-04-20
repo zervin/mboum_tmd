@@ -6,11 +6,11 @@
   "title": "MBOUM Financial Data",
   "userSettings": [
     {
-      "key": "mboumApiKey",
-      "type": "string",
-      "label": "MBOUM API Key",
+      "name": "mboumApiKey",
+      "displayName": "MBOUM API Key",
+      "type": "text",
       "required": true,
-      "description": "Get your API key from https://mboum.com"
+      "helpText": "Get your API key from https://mboum.com"
     }
   ],
   "openaiSpec": {
