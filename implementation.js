@@ -15,8 +15,28 @@
         </div>`;
       }
 
-      // Build URL
-      const url = new URL(`https://mboum.com/api/v1/${endpoint}`);
+      // Map endpoint to actual API endpoint
+      const endpointMap = {
+        quotes: "/v1/markets/stock/quotes",
+        history: "/v1/markets/stock/history",
+        news: "/v1/markets/stock/news",
+        modules: "/v1/markets/stock/modules",
+        earnings: "/v1/markets/stock/earnings",
+        dividends: "/v1/markets/stock/dividends",
+        options: "/v1/markets/stock/options",
+        search: "/v1/markets/search",
+        movers: "/v1/markets/movers"
+      };
+
+      const apiEndpoint = endpointMap[endpoint];
+      if (!apiEndpoint) {
+        return `<div style="font-family: Arial, sans-serif; color: red; padding: 15px;">
+          <strong>Error:</strong> Invalid endpoint: ${endpoint}
+        </div>`;
+      }
+
+      // Build URL with correct base URL
+      const url = new URL(`https://api.mboum.com${apiEndpoint}`);
       
       // Add parameters
       if (endpointParams) {

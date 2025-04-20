@@ -12,12 +12,22 @@
       "properties": {
         "endpoint": {
           "type": "string",
-          "enum": ["quotes", "historical", "news", "crypto", "calendar", "options", "sectors", "earnings", "dividends", "indices", "holders"],
+          "enum": [
+            "quotes",
+            "history",
+            "news",
+            "modules",
+            "earnings",
+            "dividends",
+            "options",
+            "search",
+            "movers"
+          ],
           "description": "MBOUM API endpoint to call"
         },
         "params": {
           "type": "object",
-          "description": "Parameters for the selected endpoint"
+          "description": "Parameters for the selected endpoint (e.g., {\"ticker\": \"AAPL\"} for quotes)"
         }
       },
       "required": ["endpoint"]
