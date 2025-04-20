@@ -74,26 +74,65 @@
           "type": "string",
           "description": "Search query (e.g., 'AA', required for /v1/search, /v2/search)."
         },
-        "type": {
+        "market_type_v1": {
           "type": "string",
-          "description": "Specifies the type for various endpoints (e.g., market type, filing type, holding type, options type). Check endpoint documentation for allowed values.",
+          "description": "Market type for V1 Movers or Quote endpoints.",
           "enum": [
             "STOCKS",
             "ETF",
             "MUTUALFUNDS",
-            "FUTURES",
-            "INDEX", 
-            "ETFS", 
-            "INDICES",
-            "TOTAL", 
-            "INCREASED", 
-            "NEW", 
-            "DECREASED", 
-            "SOLDOUT", 
-            "ACTIVITY",
-            "FORM-4", 
-            "ALL"
+            "FUTURES"
           ]
+        },
+        "market_type_v2": {
+            "type": "string",
+            "description": "Market type for V2 Ticker Summary, Short Interest, Historical, or Options endpoints.",
+            "enum": [
+                "STOCKS",
+                "ETF",
+                "MUTUALFUNDS",
+                "FUTURES"
+            ]
+        },
+        "ticker_asset_type_v2": {
+            "type": "string",
+            "description": "Asset type for V2 Tickers endpoint.",
+            "enum": [
+                "STOCKS",
+                "ETF",
+                "MUTUALFUNDS",
+                "FUTURES",
+                "INDEX"
+            ]
+        },
+        "holdings_activity_type_v2": {
+            "type": "string",
+            "description": "Activity type for V2 Institutional Holdings endpoint.",
+            "enum": [
+                "TOTAL",
+                "INCREASED",
+                "NEW",
+                "DECREASED",
+                "SOLDOUT",
+                "ACTIVITY"
+            ]
+        },
+        "filings_type_v2": {
+            "type": "string",
+            "description": "Filing type for V2 SEC Filings endpoint.",
+            "enum": [
+                "FORM-4",
+                "ALL"
+            ]
+        },
+        "options_asset_type_v1": {
+            "type": "string",
+            "description": "Asset type for V1 Options activity/IV endpoints.",
+            "enum": [
+                "STOCKS",
+                "ETFS",
+                "INDICES"
+            ]
         },
         "list": {
           "type": "string",
