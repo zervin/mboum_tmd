@@ -4,15 +4,14 @@
   "iconURL": "https://mboum.com/favicon.ico",
   "emoji": "📈",
   "title": "MBOUM Financial Data",
-  "userSettings": [
-    {
-      "name": "mboumApiKey",
+  "userSettings": {
+    "mboumApiKey": {
       "displayName": "MBOUM API Key",
       "type": "text",
-      "required": true,
-      "helpText": "Get your API key from https://mboum.com"
+      "helpText": "Get your API key from https://mboum.com",
+      "required": true
     }
-  ],
+  },
   "openaiSpec": {
     "name": "mboum_financial_data",
     "description": "Access MBOUM's comprehensive financial market data API",
