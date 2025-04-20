@@ -1,9 +1,38 @@
 {
-  "name": "MBOUM Financial Data",
-  "description": "Access MBOUM's comprehensive financial market data API",
-  "author": "Your Name",
-  "version": "1.0.0",
-  "icon": "https://mboum.com/favicon.ico",
-  "permissions": ["fetch"],
-  "tags": ["finance", "stocks", "crypto", "market data"]
+  "version": 1,
+  "uuid": "mboum-financial-data",
+  "iconURL": "https://mboum.com/favicon.ico",
+  "emoji": "📈",
+  "title": "MBOUM Financial Data",
+  "userSettings": {
+    "mboumApiKey": {
+      "type": "string",
+      "label": "MBOUM API Key",
+      "required": true,
+      "description": "Get your API key from https://mboum.com"
+    }
+  },
+  "openaiSpec": {
+    "name": "mboum_financial_data",
+    "description": "Access MBOUM's comprehensive financial market data API",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "enum": ["quotes", "historical", "news", "crypto", "calendar", "options", "sectors", "earnings", "dividends", "indices", "holders"],
+          "description": "MBOUM API endpoint to call"
+        },
+        "params": {
+          "type": "object",
+          "description": "Parameters for the selected endpoint"
+        }
+      },
+      "required": ["endpoint"]
+    }
+  },
+  "implementationType": "javascript",
+  "id": "mboum_financial_data",
+  "method": "GET",
+  "outputType": "respond_to_ai"
 }

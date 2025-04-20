@@ -1,6 +1,13 @@
 # MBOUM Financial Data Plugin for TypingMind
 
-This plugin provides access to MBOUM's comprehensive financial market data API.
+Official TypingMind plugin for accessing MBOUM's financial market data API.
+
+## Installation
+1. Add this repository to your TypingMind plugins:
+   ```
+   https://github.com/yourusername/mboum-financial-data
+   ```
+2. Configure your MBOUM API key in plugin settings
 
 ## Features
 - Real-time stock quotes
@@ -15,33 +22,18 @@ This plugin provides access to MBOUM's comprehensive financial market data API.
 - Market indices
 - Institutional holders
 
-## Installation
-1. Add this plugin to your TypingMind plugins directory
-2. Configure your MBOUM API key in plugin settings
-
-## Usage Examples
+## Usage
+Use natural language commands with TypingMind:
 ```
-@mboum get stock quotes for AAPL,MSFT
-@mboum show historical data for TSLA with interval 1wk
-@mboum get latest market news
-@mboum show crypto data for BTC-USD
-@mboum get options chain for AAPL with expiration 2025-06-21
-@mboum show sector performance
-@mboum get earnings for 2025-04-20
+@mboum get quotes for AAPL,MSFT
+@mboum show historical data for TSLA last week
+@mboum what's the latest market news?
 ```
 
-## API Key
-You need an MBOUM API key from https://mboum.com
+## Configuration
+Set your MBOUM API key in plugin settings. Get one at [mboum.com](https://mboum.com)
 
-## Supported Endpoints
-- /v1/quotes - Get stock quotes
-- /v1/historical - Get historical data
-- /v1/news - Get market news
-- /v1/crypto - Get cryptocurrency data
-- /v1/calendar - Get economic calendar
-- /v1/options - Get options chain data
-- /v1/sectors - Get sector performance
-- /v1/earnings - Get earnings calendar
-- /v1/dividends - Get dividend calendar
-- /v1/indices - Get market indices
-- /v1/holders - Get institutional holders
+## Repository Structure
+- `implementation.js` - Main plugin logic
+- `plugin.json` - Plugin configuration
+- `README.md` - This documentation
