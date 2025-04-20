@@ -1,0 +1,9 @@
+{
+  "name": "MBOUM Financial Data",
+  "description": "Access MBOUM's comprehensive financial market data API",
+  "author": "Your Name",
+  "version": "1.0.0",
+  "icon": "https://mboum.com/favicon.ico",
+  "permissions": ["fetch"],
+  "tags": ["finance", "stocks", "crypto", "market data"]
+}

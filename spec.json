@@ -1,0 +1,105 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MBOUM Financial Data API",
+    "description": "Access to MBOUM's financial market data endpoints",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://mboum.com/api",
+      "description": "MBOUM API server"
+    }
+  ],
+  "paths": {
+    "/v1/quotes": {
+      "get": {
+        "summary": "Get stock quotes",
+        "description": "Retrieve current market quotes for stocks",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "description": "Stock symbol(s) comma separated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/historical": {
+      "get": {
+        "summary": "Get historical data",
+        "description": "Retrieve historical market data",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "description": "Stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "description": "Time interval (1d, 1wk, 1mo)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/options": {
+      "get": {
+        "summary": "Get options chain",
+        "description": "Retrieve options chain data for a stock",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "description": "Stock symbol",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expiration",
+            "in": "query",
+            "description": "Options expiration date",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/sectors": {
+      "get": {
+        "summary": "Get sector performance",
+        "description": "Retrieve performance data for market sectors"
+      }
+    },
+    "/v1/earnings": {
+      "get": {
+        "summary": "Get earnings calendar",
+        "description": "Retrieve upcoming earnings announcements",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date to filter earnings (YYYY-MM-DD)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
