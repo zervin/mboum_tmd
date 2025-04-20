@@ -1,28 +1,42 @@
 (function() {
   // Main function definition at top level
-  function mboum_financial_data(params, userSettings) {
-    const { endpoint, params: endpointParams } = params;
-    const API_KEY = userSettings?.mboumApiKey || 'demo';
-  
-    if (!API_KEY) {
-      return `<div style='color:red'>MBOUM API key required</div>`;
+  async function mboum_financial_data(params, userSettings) {
+    try {
+      // Check if userSettings exists and has the API key
+      if (!userSettings) {
+        throw new Error("User settings are not available. Please try again or reload the application.");
+      }
+      
+      const apiKey = userSettings.mboumApiKey;
+      if (!apiKey) {
+        throw new Error("MBOUM API key is required. Please set it in the user settings.");
+      }
+
+      const { endpoint, params: endpointParams } = params;
+      if (!endpoint) {
+        throw new Error("Endpoint parameter is required.");
+      }
+
+      // Build the URL with parameters
+      const url = new URL(`https://mboum.com/api/v1/${endpoint}`);
+      Object.entries(endpointParams || {}).forEach(([key, value]) => {
+        url.searchParams.append(key, value);
+      });
+
+      // Make the API request
+      const response = await fetch(url, {
+        headers: {'X-API-KEY': apiKey}
+      });
+
+      if (!response.ok) {
+        throw new Error(`MBOUM API request failed: ${response.status} - ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return formatResponse(data, endpoint);
+    } catch (error) {
+      return displayErrorMessage(error.message);
     }
-
-    const url = new URL(`https://mboum.com/api/v1/${endpoint}`);
-    Object.entries(endpointParams || {}).forEach(([key, value]) => {
-      url.searchParams.append(key, value);
-    });
-
-    return fetch(url, {
-      headers: {'X-API-KEY': API_KEY}
-    })
-    .then(response => response.json())
-    .then(data => {
-      return `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-    })
-    .catch(error => {
-      return `<div style='color:red'>Error: ${error.message}</div>`;
-    });
   }
 
   // Helper functions
