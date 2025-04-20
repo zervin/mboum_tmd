@@ -11,61 +11,72 @@ async function mboum_financial_data(params) {
     }
 
     const endpointMap = {
-        quotes: "/v1/markets/stock/quotes",             // Existing - Stock
-        history: "/v1/markets/stock/history",            // Existing - Stock
-        news_v1: "/v1/news",                             // Renamed existing 'news' - General
-        modules: "/v1/markets/stock/modules",            // Existing - Stock
-        stock_earnings_v1: "/v1/markets/stock/earnings", // Renamed existing 'earnings' - Stock
-        stock_dividends_v1: "/v1/markets/stock/dividends", // Renamed existing 'dividends' - Stock
-        options: "/v1/markets/options",                  // Existing - Options V1 Root
-        search: "/v1/search",                           // Existing - General V1
-        movers: "/v1/movers",                           // Existing - General V1
-        screener_v1: "/v1/screener",                     // New - General V1
-        insider_trades_v1: "/v1/insider-trades",         // New - General V1
-        search_v2: "/v2/search",                         // New - General V2
-        movers_v2: "/v2/movers",                         // New - General V2
-        tickers_v2: "/v2/tickers",                       // New - General V2
-        market_info_v2: "/v2/market-info",               // New - General V2
-        screener_v2: "/v2/screener",                     // New - General V2
-        news_v2: "/v2/news",                             // New - General V2
-        quote_realtime: "/v1/quote",                     // New - Stock V1 (Real-time)
-        analyst_ratings_v1: "/v1/analyst-ratings",       // New - Stock V1
-        ticker_summary_v2: "/v2/ticker-summary",         // New - Stock V2
-        price_targets_v2: "/v2/price-targets",           // New - Stock V2
-        financials_v2: "/v2/financials",                 // New - Stock V2
-        revenue_v2: "/v2/revenue",                       // New - Stock V2
-        short_interest_v2: "/v2/short-interest",         // New - Stock V2
-        institutional_holdings_v2: "/v2/institutional-holdings", // New - Stock V2
-        sec_filings_v2: "/v2/sec-filings",               // New - Stock V2
-        historical_v2: "/v2/historical",                 // New - Stock V2
-        unusual_options_activity_v1: "/v1/unusual-options-activity", // New - Options V1
-        iv_rank_percentile_v1: "/v1/iv-rank-percentile", // New - Options V1
-        iv_change_v1: "/v1/iv-change",                   // New - Options V1
-        options_most_active_v1: "/v1/most-active",       // New - Options V1
-        options_highest_iv_v1: "/v1/highest-iv",         // New - Options V1
-        options_flow_v1: "/v1/options-flow",             // New - Options V1
-        options_v2: "/v2/options",                       // New - Options V2 Root
-        calendar_earnings_v1: "/v1/earnings",            // New - Calendar Events V1
-        calendar_dividends_v1: "/v1/dividends",          // New - Calendar Events V1
-        calendar_economic_events_v1: "/v1/economic_events", // New - Calendar Events V1
-        calendar_ipo_v1: "/v1/ipo",                      // New - Calendar Events V1
-        calendar_public_offerings_v1: "/v1/public_offerings", // New - Calendar Events V1
-        calendar_earnings_v2: "/v2/earnings",            // New - Calendar Events V2
-        calendar_dividends_v2: "/v2/dividends",          // New - Calendar Events V2
-        indicator_sma_v1: "/v1/indicators/sma",          // New - Technical Indicator V1
-        indicator_rsi_v1: "/v1/indicators/rsi",          // New - Technical Indicator V1
-        indicator_macd_v1: "/v1/indicators/macd",        // New - Technical Indicator V1
-        indicator_cci_v1: "/v1/indicators/cci",          // New - Technical Indicator V1
-        indicator_adx_v1: "/v1/indicators/adx",          // New - Technical Indicator V1
-        indicator_ema_v1: "/v1/indicators/ema",          // New - Technical Indicator V1
-        indicator_stoch_v1: "/v1/indicators/stoch",      // New - Technical Indicator V1
-        indicator_adosc_v1: "/v1/indicators/adosc",      // New - Technical Indicator V1
-        indicator_ad_v1: "/v1/indicators/ad",            // New - Technical Indicator V1
-        crypto_profile_v1: "/v1/crypto/profile",         // New - Crypto V1
-        crypto_holders_v1: "/v1/crypto/holders",         // New - Crypto V1
-        crypto_quotes_v1: "/v1/crypto/quotes",           // New - Crypto V1
-        crypto_coins_v1: "/v1/crypto/coins",             // New - Crypto V1
-        crypto_modules_v1: "/v1/crypto/modules",         // New - Crypto V1
+        // General
+        search: "/v1/markets/search",                    // Corrected - General V1
+        movers: "/v1/markets/movers",                    // Corrected - General V1
+        screener_v1: "/v1/markets/screener",              // Corrected - General V1
+        insider_trades_v1: "/v1/markets/insider-trades",  // Corrected - General V1
+        news_v1: "/v1/markets/news",                      // Corrected - General V1
+        search_v2: "/v2/markets/search",                  // Corrected - General V2
+        movers_v2: "/v2/markets/movers",                  // Corrected - General V2
+        tickers_v2: "/v2/markets/tickers",                // Corrected - General V2
+        market_info_v2: "/v2/markets/market-info",        // Corrected - General V2
+        screener_v2: "/v2/markets/screener",              // Corrected - General V2
+        news_v2: "/v2/markets/news",                      // Corrected - General V2
+        
+        // Stocks
+        quote_realtime: "/v1/markets/quote",              // Corrected - Stock V1 (Real-time)
+        quotes: "/v1/markets/stock/quotes",              // Corrected - Stock V1
+        history: "/v1/markets/stock/history",             // Corrected - Stock V1
+        modules: "/v1/markets/stock/modules",             // Corrected - Stock V1
+        stock_earnings_v1: "/v1/markets/stock/earnings",  // Renamed Existing (Path was already correct) - Stock V1
+        stock_dividends_v1: "/v1/markets/stock/dividends", // Renamed Existing (Path was already correct) - Stock V1
+        analyst_ratings_v1: "/v1/markets/stock/analyst-ratings", // Corrected - Stock V1
+        ticker_summary_v2: "/v2/markets/stock/ticker-summary", // Corrected - Stock V2
+        price_targets_v2: "/v2/markets/stock/price-targets", // Corrected - Stock V2
+        financials_v2: "/v2/markets/stock/financials",      // Corrected - Stock V2
+        revenue_v2: "/v2/markets/stock/revenue",          // Corrected - Stock V2
+        short_interest_v2: "/v2/markets/stock/short-interest", // Corrected - Stock V2
+        institutional_holdings_v2: "/v2/markets/stock/institutional-holdings", // Corrected - Stock V2
+        sec_filings_v2: "/v2/markets/stock/sec-filings",   // Corrected - Stock V2
+        historical_v2: "/v2/markets/stock/historical",      // Corrected - Stock V2
+        
+        // Options
+        options: "/v1/markets/options",                   // Corrected - Options V1 Root
+        unusual_options_activity_v1: "/v1/markets/options/unusual-options-activity", // Corrected - Options V1
+        iv_rank_percentile_v1: "/v1/markets/options/iv-rank-percentile", // Corrected - Options V1
+        iv_change_v1: "/v1/markets/options/iv-change",    // Corrected - Options V1
+        options_most_active_v1: "/v1/markets/options/most-active", // Corrected - Options V1
+        options_highest_iv_v1: "/v1/markets/options/highest-iv", // Corrected - Options V1
+        options_flow_v1: "/v1/markets/options/options-flow", // Corrected - Options V1
+        options_v2: "/v2/markets/options",                // Corrected - Options V2 Root
+        
+        // Calendar Events
+        calendar_earnings_v1: "/v1/markets/calendar/earnings", // Corrected - Calendar V1
+        calendar_dividends_v1: "/v1/markets/calendar/dividends", // Corrected - Calendar V1
+        calendar_economic_events_v1: "/v1/markets/calendar/economic_events", // Corrected - Calendar V1
+        calendar_ipo_v1: "/v1/markets/calendar/ipo",       // Corrected - Calendar V1
+        calendar_public_offerings_v1: "/v1/markets/calendar/public_offerings", // Corrected - Calendar V1
+        calendar_earnings_v2: "/v2/markets/calendar/earnings", // Corrected - Calendar V2
+        calendar_dividends_v2: "/v2/markets/calendar/dividends", // Corrected - Calendar V2
+        
+        // Technical Indicator
+        indicator_sma_v1: "/v1/markets/indicators/sma",   // Corrected - Indicator V1
+        indicator_rsi_v1: "/v1/markets/indicators/rsi",   // Corrected - Indicator V1
+        indicator_macd_v1: "/v1/markets/indicators/macd",  // Corrected - Indicator V1
+        indicator_cci_v1: "/v1/markets/indicators/cci",   // Corrected - Indicator V1
+        indicator_adx_v1: "/v1/markets/indicators/adx",   // Corrected - Indicator V1
+        indicator_ema_v1: "/v1/markets/indicators/ema",   // Corrected - Indicator V1
+        indicator_stoch_v1: "/v1/markets/indicators/stoch", // Corrected - Indicator V1
+        indicator_adosc_v1: "/v1/markets/indicators/adosc",// Corrected - Indicator V1
+        indicator_ad_v1: "/v1/markets/indicators/ad",     // Corrected - Indicator V1
+        
+        // Crypto
+        crypto_profile_v1: "/v1/crypto/profile",          // Corrected - Crypto V1
+        crypto_holders_v1: "/v1/crypto/holders",          // Corrected - Crypto V1
+        crypto_quotes_v1: "/v1/crypto/quotes",            // Corrected - Crypto V1
+        crypto_coins_v1: "/v1/crypto/coins",              // Corrected - Crypto V1
+        crypto_modules_v1: "/v1/crypto/modules",          // Corrected - Crypto V1
     };
 
     const apiEndpoint = endpointMap[endpoint];
