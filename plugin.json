@@ -26,5 +26,5 @@
   "implementationType": "javascript",
   "id": "mboum_financial_data",
   "method": "GET",
-  "outputType": "respond_to_ai"
+  "outputType": "render_html"
 }
