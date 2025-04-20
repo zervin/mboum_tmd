@@ -1,9 +1,0 @@
-[
-  {
-    "name": "mboumApiKey",
-    "type": "password",
-    "label": "MBOUM API Key",
-    "required": true,
-    "description": "Your API key for accessing MBOUM financial data. You can find your API key on your MBOUM dashboard."
-  }
-]

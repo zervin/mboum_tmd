@@ -1,6 +1,6 @@
 (function() {
   // Main function definition at top level
-  function mboum_financial_data(params) {
+  async function mboum_financial_data(params) {
     try {
       // Extract parameters
       const { endpoint, params: endpointParams } = params;
@@ -45,22 +45,22 @@
       url.searchParams.append('apikey', apiKey);
 
       // Make the request
-      return fetch(url.toString())
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`MBOUM API request failed: ${response.status} - ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          // Return the data directly for AI analysis
-          return data;
-        })
-        .catch(error => {
-          throw new Error(error.message);
-        });
+      const response = await fetch(url.toString());
+      
+      if (!response.ok) {
+        throw new Error(`MBOUM API request failed: ${response.status} - ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      // TypeMind expects the content directly
+      return data;
     } catch (error) {
-      throw new Error(error.message);
+      // Return formatted error response
+      return {
+        error: true,
+        message: error.message
+      };
     }
   }
 

@@ -9,6 +9,7 @@
     "description": "Access MBOUM's comprehensive financial market data API",
     "parameters": {
       "type": "object",
+      "required": ["endpoint"],
       "properties": {
         "endpoint": {
           "type": "string",
@@ -29,12 +30,10 @@
           "type": "object",
           "description": "Parameters for the selected endpoint (e.g., {\"ticker\": \"AAPL\"} for quotes)"
         }
-      },
-      "required": ["endpoint"]
+      }
     }
   },
   "implementationType": "javascript",
   "id": "mboum_financial_data",
-  "method": "GET",
-  "outputType": "json"
+  "method": "GET"
 }
