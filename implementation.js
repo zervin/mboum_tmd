@@ -1,85 +1,58 @@
-(function() {
-  // Main function definition at top level
-  function mboum_financial_data(params) {
-    try {
-      // Extract parameters
-      const { endpoint, params: endpointParams } = params;
-      
-      // Hardcoded API key - replace with your actual API key
-      const apiKey = "demo"; // Replace with your actual MBOUM API key
+// Main function definition
+async function mboum_financial_data({ endpoint, params }) {
+  try {
+    // Hardcoded API key - replace with your actual API key
+    const apiKey = "demo"; // Replace with your actual MBOUM API key
 
-      // Validate endpoint
-      if (!endpoint) {
-        return `<div style="font-family: Arial, sans-serif; color: red; padding: 15px;">
-          <strong>Error:</strong> Endpoint parameter is required.
-        </div>`;
-      }
-
-      // Map endpoint to actual API endpoint
-      const endpointMap = {
-        quotes: "/v1/markets/stock/quotes",
-        history: "/v1/markets/stock/history",
-        news: "/v1/markets/stock/news",
-        modules: "/v1/markets/stock/modules",
-        earnings: "/v1/markets/stock/earnings",
-        dividends: "/v1/markets/stock/dividends",
-        options: "/v1/markets/stock/options",
-        search: "/v1/markets/search",
-        movers: "/v1/markets/movers"
-      };
-
-      const apiEndpoint = endpointMap[endpoint];
-      if (!apiEndpoint) {
-        return `<div style="font-family: Arial, sans-serif; color: red; padding: 15px;">
-          <strong>Error:</strong> Invalid endpoint: ${endpoint}
-        </div>`;
-      }
-
-      // Build URL with correct base URL
-      const url = new URL(`https://api.mboum.com${apiEndpoint}`);
-      
-      // Add parameters
-      if (endpointParams) {
-        Object.entries(endpointParams).forEach(([key, value]) => {
-          url.searchParams.append(key, value);
-        });
-      }
-      
-      // Add API key
-      url.searchParams.append('apikey', apiKey);
-
-      // Make the request
-      return fetch(url.toString())
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`MBOUM API request failed: ${response.status} - ${response.statusText}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          return `
-            <div style="font-family: Arial, sans-serif; padding: 15px;">
-              <h2>MBOUM ${endpoint.toUpperCase()} Data</h2>
-              <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; overflow: auto; max-height: 500px;">${JSON.stringify(data, null, 2)}</pre>
-            </div>
-          `;
-        })
-        .catch(error => {
-          return `
-            <div style="font-family: Arial, sans-serif; color: red; padding: 15px;">
-              <strong>Error:</strong> ${error.message}
-            </div>
-          `;
-        });
-    } catch (error) {
-      return `
-        <div style="font-family: Arial, sans-serif; color: red; padding: 15px;">
-          <strong>Error:</strong> ${error.message}
-        </div>
-      `;
+    // Validate endpoint
+    if (!endpoint) {
+      throw new Error("Endpoint parameter is required.");
     }
-  }
 
-  // Explicitly expose function to global scope
-  window.mboum_financial_data = mboum_financial_data;
-})();
+    // Map endpoint to actual API endpoint
+    const endpointMap = {
+      quotes: "/v1/markets/stock/quotes",
+      history: "/v1/markets/stock/history",
+      news: "/v1/markets/stock/news",
+      modules: "/v1/markets/stock/modules",
+      earnings: "/v1/markets/stock/earnings",
+      dividends: "/v1/markets/stock/dividends",
+      options: "/v1/markets/stock/options",
+      search: "/v1/markets/search",
+      movers: "/v1/markets/movers"
+    };
+
+    const apiEndpoint = endpointMap[endpoint];
+    if (!apiEndpoint) {
+      throw new Error(`Invalid endpoint: ${endpoint}`);
+    }
+
+    // Build URL with correct base URL
+    const url = new URL(`https://api.mboum.com${apiEndpoint}`);
+    
+    // Add parameters
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.append(key, value);
+      });
+    }
+    
+    // Add API key
+    url.searchParams.append('apikey', apiKey);
+
+    // Make the request
+    const response = await fetch(url.toString());
+    
+    if (!response.ok) {
+      throw new Error(`MBOUM API request failed: ${response.status} - ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+// Explicitly expose function to global scope
+window.mboum_financial_data = mboum_financial_data;
