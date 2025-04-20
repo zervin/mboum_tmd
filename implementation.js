@@ -2,12 +2,13 @@
   const BASE_URL = 'https://mboum.com/api';
   const API_KEY = 'demo'; // Using MBOUM's demo key for testing
 
+  // Main plugin function
   function mboum_financial_data(params) {
     const { endpoint, params: endpointParams } = params;
     const API_KEY = 'demo'; // Hardcoded for now
     
     // Build URL
-    const url = new URL(`${BASE_URL}/v1/${endpoint}`);
+    const url = new URL(`https://mboum.com/api/v1/${endpoint}`);
     Object.entries(endpointParams || {}).forEach(([key, value]) => {
       url.searchParams.append(key, value);
     });
@@ -34,6 +35,7 @@
       });
   }
 
+  // Helper functions
   function formatResponse(data, endpoint) {
     // Basic HTML formatting
     return `
@@ -52,6 +54,6 @@
     `;
   }
 
-  // Return the function directly without export
-  return mboum_financial_data;
+  // Explicitly expose function to global scope
+  window.mboum_financial_data = mboum_financial_data;
 })();
