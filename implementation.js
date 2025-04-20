@@ -2,35 +2,26 @@
   // Main function definition at top level
   function mboum_financial_data(params, userSettings) {
     const { endpoint, params: endpointParams } = params;
-    const API_KEY = userSettings?.mboumApiKey || 'demo'; // Fallback to demo key
+    const API_KEY = userSettings?.mboumApiKey || 'demo';
+  
+    if (!API_KEY) {
+      return `<div style='color:red'>MBOUM API key required</div>`;
+    }
 
-    // Build URL
     const url = new URL(`https://mboum.com/api/v1/${endpoint}`);
     Object.entries(endpointParams || {}).forEach(([key, value]) => {
       url.searchParams.append(key, value);
     });
-    
-    // Make request
-    return fetch(url.toString(), {
-      headers: {
-        'Accept': 'application/json',
-        'X-API-KEY': API_KEY
-      }
+
+    return fetch(url, {
+      headers: {'X-API-KEY': API_KEY}
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
-      }
-      return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      return formatResponse(data, endpoint);
+      return `<pre>${JSON.stringify(data, null, 2)}</pre>`;
     })
     .catch(error => {
-      return displayErrorMessage(error.message);
+      return `<div style='color:red'>Error: ${error.message}</div>`;
     });
   }
 

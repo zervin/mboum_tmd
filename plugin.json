@@ -6,9 +6,9 @@
   "title": "MBOUM Financial Data",
   "userSettings": {
     "mboumApiKey": {
-      "displayName": "MBOUM API Key",
-      "type": "text",
-      "helpText": "Get your API key from https://mboum.com",
+      "name": "mboumApiKey",
+      "description": "MBOUM API Key",
+      "type": "string",
       "required": true
     }
   },
