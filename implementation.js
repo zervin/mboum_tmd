@@ -180,8 +180,14 @@ async function mboum_financial_data(params) {
     }
     url.searchParams.append('apikey', apiKey);
 
-    // Make the request
-    const response = await fetch(url.toString());
+    let response;
+    try {
+      // Make the request
+      response = await fetch(url.toString());
+    } catch (networkError) {
+      // Handle fetch errors (network, DNS, etc.)
+      return { error: true, message: `Network error calling MBOUM API: ${networkError.message}` };
+    }
 
     // Handle non-OK responses specifically
     if (!response.ok) {
@@ -199,27 +205,24 @@ async function mboum_financial_data(params) {
       };
     }
 
-    // Try to parse the JSON response
-    let data;
+    // Try to parse the successful response as JSON
     try {
-      data = await response.json();
-    } catch (parseError) {
-      // Return standard error object if JSON parsing fails
-      return { error: true, message: `Failed to parse JSON response from MBOUM API: ${parseError.message}` };
+      const jsonData = await response.json();
+      // Return raw JSON data directly on success
+      return jsonData;
+    } catch (jsonError) {
+      // Handle cases where the response is OK but not valid JSON
+      return { error: true, message: `Failed to parse MBOUM API response as JSON: ${jsonError.message}` };
     }
 
-    // TypeMind expects the plain data object on success
-    return data;
-
-  } catch (error) {
-    // Catch any other unexpected errors (e.g., network issues)
-    // Return standard error object
-    return {
-      error: true,
-      message: error.message || 'An unexpected error occurred.'
-    };
+  } catch (generalError) {
+    // Catch any other unexpected errors during execution
+    console.error("Unexpected error in mboum_financial_data:", generalError); // Log for debugging
+    return { error: true, message: `An unexpected error occurred: ${generalError.message}` };
   }
 }
 
-// Explicitly expose function to global scope
-window.mboum_financial_data = mboum_financial_data;
+// Explicitly expose the function to the global scope (window)
+if (typeof window !== 'undefined') {
+  window.mboum_financial_data = mboum_financial_data;
+}
