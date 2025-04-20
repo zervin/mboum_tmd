@@ -1,29 +1,40 @@
 {
-  "name": "mboum_financial_data",
-  "description": "Access MBOUM's comprehensive financial market data API",
-  "parameters": {
-    "type": "object",
-    "properties": {
-      "endpoint": {
-        "type": "string",
-        "enum": [
-          "quotes",
-          "history",
-          "news",
-          "modules",
-          "earnings",
-          "dividends",
-          "options",
-          "search",
-          "movers"
-        ],
-        "description": "MBOUM API endpoint to call"
+  "version": 1,
+  "uuid": "mboum-financial-data",
+  "iconURL": "https://mboum.com/favicon.ico",
+  "emoji": "📈",
+  "title": "MBOUM Financial Data",
+  "openaiSpec": {
+    "name": "mboum_financial_data",
+    "description": "Access MBOUM's comprehensive financial market data API",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "enum": [
+            "quotes",
+            "history",
+            "news",
+            "modules",
+            "earnings",
+            "dividends",
+            "options",
+            "search",
+            "movers"
+          ],
+          "description": "MBOUM API endpoint to call"
+        },
+        "params": {
+          "type": "object",
+          "description": "Parameters for the selected endpoint (e.g., {\"ticker\": \"AAPL\"} for quotes)"
+        }
       },
-      "params": {
-        "type": "object",
-        "description": "Parameters for the selected endpoint (e.g., {\"ticker\": \"AAPL\"} for quotes)"
-      }
-    },
-    "required": ["endpoint"]
-  }
+      "required": ["endpoint"]
+    }
+  },
+  "implementationType": "javascript",
+  "id": "mboum_financial_data",
+  "method": "GET",
+  "outputType": "render_html"
 }
