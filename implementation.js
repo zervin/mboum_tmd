@@ -23,4 +23,5 @@ async function mboum_financial_data(params) {
   return await response.json();
 }
 
-export default mboum_financial_data;
+// Changed to CommonJS export
+module.exports = mboum_financial_data;
