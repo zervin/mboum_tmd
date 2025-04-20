@@ -1,48 +1,39 @@
 {
-  "name": "mboum_financial_data",
-  "description": "Access MBOUM's comprehensive financial market data API",
-  "parameters": {
-    "type": "object",
-    "required": [
-      "requests"
-    ],
-    "properties": {
-      "requests": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "required": [
-            "function_name",
-            "parameters"
-          ],
-          "properties": {
-            "function_name": {
-              "type": "string",
-              "enum": [
-                "get_quotes",
-                "get_historical",
-                "get_news",
-                "get_crypto",
-                "get_calendar",
-                "get_options",
-                "get_sectors",
-                "get_earnings",
-                "get_dividends",
-                "get_indices",
-                "get_holders"
-              ],
-              "description": "The MBOUM API endpoint to call"
-            },
-            "parameters": {
-              "type": "object",
-              "required": [],
-              "properties": {},
-              "description": "Parameters for the selected endpoint"
-            }
-          }
-        },
-        "description": "An array of data requests to the MBOUM API"
-      }
+  "version": 1,
+  "uuid": "mboum-financial-data",
+  "iconURL": "https://mboum.com/favicon.ico",
+  "emoji": "📈",
+  "title": "MBOUM Financial Data",
+  "userSettings": [
+    {
+      "name": "mboumApiKey",
+      "type": "password",
+      "label": "MBOUM API Key",
+      "required": true,
+      "description": "Your API key for accessing MBOUM financial data."
     }
-  }
+  ],
+  "openaiSpec": {
+    "name": "mboum_financial_data",
+    "description": "Access MBOUM's comprehensive financial market data API",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "enum": ["quotes", "historical", "news", "crypto", "calendar", "options", "sectors", "earnings", "dividends", "indices", "holders"],
+          "description": "MBOUM API endpoint to call"
+        },
+        "params": {
+          "type": "object",
+          "description": "Parameters for the selected endpoint"
+        }
+      },
+      "required": ["endpoint"]
+    }
+  },
+  "implementationType": "javascript",
+  "id": "mboum_financial_data",
+  "method": "GET",
+  "outputType": "render_html"
 }
