@@ -61,52 +61,58 @@ async function mboum_stock_data(params) {
       ticker: {
         type: 'string',
         validate: (val) => typeof val === 'string' && val.trim().length > 0,
-        errorMsg: "must be a non-empty string (e.g., 'AAPL', 'MSFT')"
+        errorMsg: "must be a non-empty string"
       },
       type: {
         type: 'string',
-        validate: (val) => ['realtime', 'delayed'].includes(val),
-        errorMsg: "must be either 'realtime' or 'delayed'"
+        validate: (val) => ['STOCKS', 'ETF', 'MUTUALFUNDS', 'FUTURES'].includes(val),
+        errorMsg: "must be one of: STOCKS, ETF, MUTUALFUNDS, FUTURES"
       },
       interval: {
         type: 'string',
-        validate: (val) => ['1min', '5min', '15min', '30min', '60min'].includes(val),
-        errorMsg: "must be one of: '1min', '5min', '15min', '30min', '60min'"
+        validate: (val) => ['1m', '5m', '15m', '30m', '1d', '1wk', '1mo', '3mo'].includes(val),
+        errorMsg: "must be one of: 1m, 5m, 15m, 30m, 1d, 1wk, 1mo, 3mo"
       },
       module: {
         type: 'string',
-        validate: (val) => ['profile', 'summary', 'income-statement', 'cash-flow', 'balance-sheet', 'key-metrics', 'financials', 'major-holders', 'institutional-holders', 'sector-performance', 'recommendation-ratings', 'price-targets', 'earnings', 'earnings-history', 'insider-transactions', 'ipo-upcoming', 'ipo-calendar', 'analyst-recommendations', 'index-trends', 'industry-trends', 'sector-trends', 'symbol-lookup', 'market-news', 'list-trends', 'etf-trends', 'index-constituents', 'crypto-ratings', 'crypto-news', 'crypto-exchanges', 'crypto-asset-profile', 'crypto-asset-holdings', 'crypto-asset-profile-2', 'crypto-asset-holdings-2', 'crypto-asset-profile-3', 'crypto-asset-holdings-3', 'crypto-asset-profile-4', 'crypto-asset-holdings-4', 'crypto-asset-profile-5', 'crypto-asset-holdings-5', 'crypto-asset-profile-6', 'crypto-asset-holdings-6', 'crypto-asset-profile-7', 'crypto-asset-holdings-7', 'crypto-asset-profile-8', 'crypto-asset-holdings-8', 'crypto-asset-profile-9', 'crypto-asset-holdings-9', 'crypto-asset-profile-10', 'crypto-asset-holdings-10', 'crypto-asset-profile-11', 'crypto-asset-holdings-11', 'crypto-asset-profile-12', 'crypto-asset-holdings-12', 'crypto-asset-profile-13', 'crypto-asset-holdings-13', 'crypto-asset-profile-14', 'crypto-asset-holdings-14', 'crypto-asset-profile-15', 'crypto-asset-holdings-15', 'crypto-asset-profile-16', 'crypto-asset-holdings-16', 'crypto-asset-profile-17', 'crypto-asset-holdings-17', 'crypto-asset-profile-18', 'crypto-asset-holdings-18', 'crypto-asset-profile-19', 'crypto-asset-holdings-19', 'crypto-asset-profile-20', 'crypto-asset-holdings-20', 'crypto-asset-profile-21', 'crypto-asset-holdings-21', 'crypto-asset-profile-22', 'crypto-asset-holdings-22', 'crypto-asset-profile-23', 'crypto-asset-holdings-23', 'crypto-asset-profile-24', 'crypto-asset-holdings-24', 'crypto-asset-profile-25', 'crypto-asset-holdings-25', 'crypto-asset-profile-26', 'crypto-asset-holdings-26', 'crypto-asset-profile-27', 'crypto-asset-holdings-27', 'crypto-asset-profile-28', 'crypto-asset-holdings-28', 'crypto-asset-profile-29', 'crypto-asset-holdings-29', 'crypto-asset-profile-30', 'crypto-asset-holdings-30', 'crypto-asset-profile-31', 'crypto-asset-holdings-31', 'crypto-asset-profile-32', 'crypto-asset-holdings-32', 'crypto-asset-profile-33', 'crypto-asset-holdings-33', 'crypto-asset-profile-34', 'crypto-asset-holdings-34', 'crypto-asset-profile-35', 'crypto-asset-holdings-35', 'crypto-asset-profile-36', 'crypto-asset-holdings-36', 'crypto-asset-profile-37', 'crypto-asset-holdings-37', 'crypto-asset-profile-38', 'crypto-asset-holdings-38', 'crypto-asset-profile-39', 'crypto-asset-holdings-39', 'crypto-asset-profile-40', 'crypto-asset-holdings-40', 'crypto-asset-profile-41', 'crypto-asset-holdings-41', 'crypto-asset-profile-42', 'crypto-asset-holdings-42', 'crypto-asset-profile-43', 'crypto-asset-holdings-43', 'crypto-asset-profile-44', 'crypto-asset-holdings-44', 'crypto-asset-profile-45', 'crypto-asset-holdings-45', 'crypto-asset-profile-46', 'crypto-asset-holdings-46', 'crypto-asset-profile-47', 'crypto-asset-holdings-47', 'crypto-asset-profile-48', 'crypto-asset-holdings-48', 'crypto-asset-profile-49', 'crypto-asset-holdings-49', 'crypto-asset-profile-50', 'crypto-asset-holdings-50', 'crypto-asset-profile-51', 'crypto-asset-holdings-51', 'crypto-asset-profile-52', 'crypto-asset-holdings-52', 'crypto-asset-profile-53', 'crypto-asset-holdings-53', 'crypto-asset-profile-54', 'crypto-asset-holdings-54', 'crypto-asset-profile-55', 'crypto-asset-holdings-55', 'crypto-asset-profile-56', 'crypto-asset-holdings-56', 'crypto-asset-profile-57', 'crypto-asset-holdings-57', 'crypto-asset-profile-58', 'crypto-asset-holdings-58', 'crypto-asset-profile-59', 'crypto-asset-holdings-59', 'crypto-asset-profile-60', 'crypto-asset-holdings-60', 'crypto-asset-profile-61', 'crypto-asset-holdings-61', 'crypto-asset-profile-62', 'crypto-asset-holdings-62', 'crypto-asset-profile-63', 'crypto-asset-holdings-63', 'crypto-asset-profile-64', 'crypto-asset-holdings-64', 'crypto-asset-profile-65', 'crypto-asset-holdings-65', 'crypto-asset-profile-66', 'crypto-asset-holdings-66', 'crypto-asset-profile-67', 'crypto-asset-holdings-67', 'crypto-asset-profile-68', 'crypto-asset-holdings-68', 'crypto-asset-profile-69', 'crypto-asset-holdings-69', 'crypto-asset-profile-70', 'crypto-asset-holdings-70', 'crypto-asset-profile-71', 'crypto-asset-holdings-71', 'crypto-asset-profile-72', 'crypto-asset-holdings-72', 'crypto-asset-profile-73', 'crypto-asset-holdings-73', 'crypto-asset-profile-74', 'crypto-asset-holdings-74', 'crypto-asset-profile-75', 'crypto-asset-holdings-75', 'crypto-asset-profile-76', 'crypto-asset-holdings-76', 'crypto-asset-profile-77', 'crypto-asset-holdings-77', 'crypto-asset-profile-78', 'crypto-asset-holdings-78', 'crypto-asset-profile-79', 'crypto-asset-holdings-79', 'crypto-asset-profile-80', 'crypto-asset-holdings-80', 'crypto-asset-profile-81', 'crypto-asset-holdings-81', 'crypto-asset-profile-82', 'crypto-asset-holdings-82', 'crypto-asset-profile-83', 'crypto-asset-holdings-83', 'crypto-asset-profile-84', 'crypto-asset-holdings-84', 'crypto-asset-profile-85', 'crypto-asset-holdings-85', 'crypto-asset-profile-86', 'crypto-asset-holdings-86', 'crypto-asset-profile-87', 'crypto-asset-holdings-87', 'crypto-asset-profile-88', 'crypto-asset-holdings-88', 'crypto-asset-profile-89', 'crypto-asset-holdings-89', 'crypto-asset-profile-90', 'crypto-asset-holdings-90', 'crypto-asset-profile-91', 'crypto-asset-holdings-91', 'crypto-asset-profile-92', 'crypto-asset-holdings-92', 'crypto-asset-profile-93', 'crypto-asset-holdings-93', 'crypto-asset-profile-94', 'crypto-asset-holdings-94', 'crypto-asset-profile-95', 'crypto-asset-holdings-95', 'crypto-asset-profile-96', 'crypto-asset-holdings-96', 'crypto-asset-profile-97', 'crypto-asset-holdings-97', 'crypto-asset-profile-98', 'crypto-asset-holdings-98', 'crypto-asset-profile-99', 'crypto-asset-holdings-99', 'crypto-asset-profile-100', 'crypto-asset-holdings-100'].includes(val),
-        errorMsg: "must be one of the valid module names"
+        validate: (val) => [
+          'profile', 'income-statement', 'balance-sheet', 'cashflow-statement',
+          'financial-data', 'statistics', 'ratios', 'calendar-events', 'sec-filings',
+          'recommendation-trend', 'upgrade-downgrade-history', 'insider-transactions',
+          'insider-holders', 'net-share-purchase-activity', 'earnings', 'index-trend',
+          'industry-trend', 'sector-trend'
+        ].includes(val),
+        errorMsg: "must be a valid module name"
+      },
+      diffandsplits: {
+        type: 'string',
+        validate: (val) => ['true', 'false'].includes(val.toLowerCase()),
+        errorMsg: "must be either 'true' or 'false'"
       },
       timeframe: {
         type: 'string',
-        validate: (val) => ['annual', 'quarterly'].includes(val),
-        errorMsg: "must be either 'annual' or 'quarterly'"
-      },
-      diffandsplits: {
-        type: 'boolean',
-        validate: (val) => val === 'true' || val === 'false' || val === true || val === false,
-        errorMsg: "must be either 'true' or 'false'"
+        validate: (val) => ['annually', 'quarterly', 'trailing'].includes(val),
+        errorMsg: "must be one of: annually, quarterly, trailing"
       },
       page: {
         type: 'integer',
-        validate: (val) => Number.isInteger(Number(val)) && Number(val) > 0,
+        validate: (val) => Number.isInteger(Number(val)) && Number(val) >= 1,
         errorMsg: "must be a positive integer"
       },
       limit: {
         type: 'integer',
-        validate: (val) => Number.isInteger(Number(val)) && Number(val) > 0,
+        validate: (val) => Number.isInteger(Number(val)) && Number(val) >= 1,
         errorMsg: "must be a positive integer"
       },
       from_date: {
         type: 'string',
-        validate: (val) => typeof val === 'string' && val.trim().length > 0,
-        errorMsg: "must be a non-empty string (e.g., '2022-01-01')"
+        validate: (val) => /^\d{4}-\d{2}-\d{2}$/.test(val) && !isNaN(Date.parse(val)),
+        errorMsg: "must be a valid date in YYYY-MM-DD format"
       },
       to_date: {
         type: 'string',
-        validate: (val) => typeof val === 'string' && val.trim().length > 0,
-        errorMsg: "must be a non-empty string (e.g., '2022-12-31')"
+        validate: (val) => /^\d{4}-\d{2}-\d{2}$/.test(val) && !isNaN(Date.parse(val)),
+        errorMsg: "must be a valid date in YYYY-MM-DD format"
       }
     };
 
