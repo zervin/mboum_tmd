@@ -1,13 +1,19 @@
 // Main function definition directly in global scope
-async function mboum_financial_data(params) {
+async function mboum_financial_data(params) { 
   try {
-    // Extract parameters
-    const { endpoint, params: endpointParams } = params;
-    const apiKey = "demo"; // Replace with your actual MBOUM API key
+    // Extract the structured details from the top-level params object
+    const { requestDetails } = params;
+
+    if (!requestDetails || typeof requestDetails !== 'object') {
+      return { error: true, message: "Invalid 'requestDetails' parameter structure provided." };
+    }
+
+    const { endpoint, queryParams } = requestDetails; 
+
+    const apiKey = "demo"; 
 
     if (!endpoint) {
-      // Return error object directly for validation errors
-      return { error: true, message: "Endpoint parameter is required." };
+      return { error: true, message: "'endpoint' is required within 'requestDetails'." };
     }
 
     const endpointMap = {
@@ -79,13 +85,11 @@ async function mboum_financial_data(params) {
         crypto_modules_v1: "/v1/crypto/modules",          // Corrected - Crypto V1
     };
 
-    const apiEndpoint = endpointMap[endpoint];
-    if (!apiEndpoint) {
-      // Return error object directly for validation errors
+    const apiPath = endpointMap[endpoint]; 
+    if (!apiPath) {
       return { error: true, message: `Invalid endpoint selected: ${endpoint}` };
     }
 
-    // --- Parameter Validation --- 
     const requiredParamsMap = {
         search: ['search'],
         movers: ['type'], 
@@ -146,19 +150,18 @@ async function mboum_financial_data(params) {
 
     const requiredParams = requiredParamsMap[endpoint] || [];
     const missingParams = [];
+    const actualParams = queryParams || {}; 
 
     if (endpoint === 'calendar_earnings_v2') {
-        // Special case: requires 'days' OR ('start_date' AND 'end_date')
-        const hasDays = endpointParams && endpointParams.hasOwnProperty('days') && endpointParams.days;
-        const hasDateRange = endpointParams && endpointParams.hasOwnProperty('start_date') && endpointParams.start_date && 
-                             endpointParams.hasOwnProperty('end_date') && endpointParams.end_date;
+        const hasDays = actualParams.hasOwnProperty('days') && actualParams.days;
+        const hasDateRange = actualParams.hasOwnProperty('start_date') && actualParams.start_date && 
+                             actualParams.hasOwnProperty('end_date') && actualParams.end_date;
         if (!hasDays && !hasDateRange) {
              missingParams.push("'days' or ('start_date' and 'end_date')");
         }
     } else {
-        // Standard case
         requiredParams.forEach(param => {
-          if (!endpointParams || !endpointParams.hasOwnProperty(param) || !endpointParams[param]) {
+          if (!actualParams.hasOwnProperty(param) || !actualParams[param]) {
             missingParams.push(param);
           }
         });
@@ -170,59 +173,50 @@ async function mboum_financial_data(params) {
           message: `Missing required parameter(s) for endpoint '${endpoint}': ${missingParams.join(', ')}` 
       };
     }
-    // --- End Parameter Validation ---
 
-    const url = new URL(`https://api.mboum.com${apiEndpoint}`);
-    if (endpointParams) {
-      Object.entries(endpointParams).forEach(([key, value]) => {
-        url.searchParams.append(key, value);
+    const url = new URL(`https://api.mboum.com${apiPath}`);
+    if (actualParams) {
+      Object.entries(actualParams).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          url.searchParams.append(key, value);
+        }
       });
     }
     url.searchParams.append('apikey', apiKey);
 
     let response;
     try {
-      // Make the request
       response = await fetch(url.toString());
     } catch (networkError) {
-      // Handle fetch errors (network, DNS, etc.)
       return { error: true, message: `Network error calling MBOUM API: ${networkError.message}` };
     }
 
-    // Handle non-OK responses specifically
     if (!response.ok) {
       let errorBody = '';
       try {
-        // Try to get more details from the API error response
         errorBody = await response.text();
       } catch (e) {
         // Ignore if reading the body fails
       }
-      // Return standard error object for API errors
       return {
         error: true,
         message: `MBOUM API request failed: ${response.status} - ${response.statusText}. ${errorBody}`.trim()
       };
     }
 
-    // Try to parse the successful response as JSON
     try {
       const jsonData = await response.json();
-      // Return raw JSON data directly on success
       return jsonData;
     } catch (jsonError) {
-      // Handle cases where the response is OK but not valid JSON
       return { error: true, message: `Failed to parse MBOUM API response as JSON: ${jsonError.message}` };
     }
 
   } catch (generalError) {
-    // Catch any other unexpected errors during execution
-    console.error("Unexpected error in mboum_financial_data:", generalError); // Log for debugging
+    console.error("Unexpected error in mboum_financial_data:", generalError); 
     return { error: true, message: `An unexpected error occurred: ${generalError.message}` };
   }
 }
 
-// Explicitly expose the function to the global scope (window)
 if (typeof window !== 'undefined') {
   window.mboum_financial_data = mboum_financial_data;
 }

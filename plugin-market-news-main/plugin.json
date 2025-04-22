@@ -1,0 +1,45 @@
+{
+  "id": "fetch_market_news_sentiment",
+  "uuid": "345e2340-4831-4f9f-a495-cea4a96b6575",
+  "userSettings": [
+    {
+      "name": "alphaVantageAPIKey",
+      "required": true,
+      "type": "password",
+      "label": "Alpha Vantage API Key"
+    }
+  ],
+  "emoji": "📈",
+  "title": "Market News",
+  "openaiSpec": {
+    "name": "fetch_market_news_sentiment",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "time_to": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date and time of news range (YYYYMMDDTHHMM format)"
+        },
+        "time_from": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start date and time of news range (YYYYMMDDTHHMM format)"
+        },
+        "searchMode": {
+          "enum": ["tickers", "topics"],
+          "type": "string",
+          "description": "Choose whether to search by tickers or topics."
+        },
+        "searchTerms": {
+          "type": "string",
+          "description": "Comma-separated tickers (if searchMode is 'tickers') or topics (if searchMode is 'topics').  tickers is the stock/crypto/forex symbols of your choice. For example: tickers=IBM will filter for articles that mention the IBM ticker; tickers=COIN,CRYPTO:BTC,FOREX:USD will filter for articles that simultaneously mention Coinbase (COIN), Bitcoin (CRYPTO:BTC), and US Dollar (FOREX:USD) in their content. make sure add COIN for tickers is user search crypto. topics is he news topics of your choice. For example: topics=technology will filter for articles that write about the technology sector; topics=technology,ipo will filter for articles that simultaneously cover technology and IPO in their content. Below is the full list of supported topics: Blockchain: blockchain Earnings: earnings IPO: ipo Mergers & Acquisitions: mergers_and_acquisitions Financial Markets: financial_markets Economy - Fiscal Policy (e.g., tax reform, government spending): economy_fiscal Economy - Monetary Policy (e.g., interest rates, inflation): economy_monetary Economy - Macro/Overall: economy_macro Energy & Transportation: energy_transportation Finance: finance Life Sciences: life_sciences Manufacturing: manufacturing Real Estate & Construction: real_estate Retail & Wholesale: retail_wholesale Technology: technology"
+        }
+      }
+    },
+    "description": "Fetches market news articles from Alpha Vantage. This plugin automatically displays the fetched news results to the user. Your response should not include any additional output intended for the user."
+  },
+  "implementationType": "javascript",
+  "outputType": "render_html"
+}
