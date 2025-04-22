@@ -13,87 +13,123 @@ This plugin provides access to Mboum's stock data API, focusing on individual st
 ## Endpoints
 This plugin supports the following Mboum API endpoints:
 
-1. **`/v1/quick-stats/quote`** (`quote`)
+### v1 Endpoints
+- **`/v1/markets/quote`** (`quote`)
    - **Required Parameters**:
-     - `symbol`: String - Stock symbol
-   - **Optional Parameters**:
-     - `region`: String - Region code for localized data
-     - `lang`: String - Language code for localized data
-   - **Example**: `/v1/quick-stats/quote?symbol=AAPL&region=US`
-
-2. **`/v1/stocks/profile`** (`profile`)
-   - **Required Parameters**:
-     - `symbol`: String - Stock symbol
-   - **Optional Parameters**:
-     - `region`: String - Region code for localized data
-     - `lang`: String - Language code for localized data
-   - **Example**: `/v1/stocks/profile?symbol=AAPL&region=US`
-
-3. **`/v1/stocks/summary`** (`summary`)
-   - **Required Parameters**:
-     - `symbol`: String - Stock symbol
-   - **Optional Parameters**:
-     - `region`: String - Region code for localized data
-     - `lang`: String - Language code for localized data
-   - **Example**: `/v1/stocks/summary?symbol=AAPL&region=US`
-
-4. **`/v1/stocks/balance-sheet`** (`balance_sheet`)
-   - **Required Parameters**:
-     - `symbol`: String - Stock symbol
-   - **Optional Parameters**:
-     - `period`: String - Reporting period, one of: "annual", "quarterly"
-   - **Example**: `/v1/stocks/balance-sheet?symbol=AAPL&period=annual`
-
-5. **`/v1/stocks/cash-flow`** (`cash_flow`)
-   - **Required Parameters**:
-     - `symbol`: String - Stock symbol
-   - **Optional Parameters**:
-     - `period`: String - Reporting period, one of: "annual", "quarterly"
-   - **Example**: `/v1/stocks/cash-flow?symbol=AAPL&period=annual`
-
-6. **`/v1/stocks/income-statement`** (`income_statement`)
-   - **Required Parameters**:
-     - `symbol`: String - Stock symbol
-   - **Optional Parameters**:
-     - `period`: String - Reporting period, one of: "annual", "quarterly"
-   - **Example**: `/v1/stocks/income-statement?symbol=AAPL&period=annual`
-
-7. **`/v1/stocks/historical`** (`historical`)
-   - **Required Parameters**:
-     - `symbol`: String - Stock symbol
-   - **Optional Parameters**:
-     - `interval`: String - Time interval, one of: "1d", "1wk", "1mo"
-     - `range`: String - Time range, one of: "1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"
-     - `events`: Boolean - Include events (dividends, splits)
-     - `region`: String - Region code for localized data
-     - `lang`: String - Language code for localized data
-   - **Example**: `/v1/stocks/historical?symbol=AAPL&interval=1d&range=3mo`
-
-8. **`/v1/stocks/recommendation`** (`recommendation`)
-   - **Required Parameters**:
-     - `symbol`: String - Stock symbol
+     - `ticker`: String - Stock ticker
+     - `type`: String - Type of security (STOCKS|ETF|MUTUALFUNDS|FUTURES)
    - **Optional Parameters**: None
-   - **Example**: `/v1/stocks/recommendation?symbol=AAPL`
+   - **Example**: `/v1/markets/quote?ticker=AAPL&type=STOCKS`
 
-9. **`/v1/stocks/stats`** (`key_statistics`)
+- **`/v1/markets/stock/quotes`** (`stock_quotes`)
    - **Required Parameters**:
-     - `symbol`: String - Stock symbol
+     - `ticker`: String - Comma-separated list of stock tickers
    - **Optional Parameters**: None
-   - **Example**: `/v1/stocks/stats?symbol=AAPL`
+   - **Example**: `/v1/markets/stock/quotes?ticker=AAPL,GOOG,MSFT`
 
-10. **`/v1/stocks/esg`** (`esg_data`)
+- **`/v1/markets/stock/history`** (`stock_history`)
    - **Required Parameters**:
-     - `symbol`: String - Stock symbol
-   - **Optional Parameters**: None
-   - **Example**: `/v1/stocks/esg?symbol=AAPL`
+     - `ticker`: String - Stock ticker
+     - `interval`: String - Time interval (1m|5m|15m|30m|1d|1wk|1mo|3mo)
+   - **Optional Parameters**:
+     - `diffandsplits`: Boolean - Include differences and splits
+   - **Example**: `/v1/markets/stock/history?ticker=AAPL&interval=1d&diffandsplits=true`
 
-11. **`/v1/stocks/insider`** (`insider_transactions`)
+- **`/v1/markets/stock/modules`** (`stock_modules`)
    - **Required Parameters**:
-     - `symbol`: String - Stock symbol
+     - `ticker`: String - Stock ticker
+     - `module`: String - Financial data module (see full list below)
+   - **Optional Parameters**:
+     - `timeframe`: String - Timeframe (annually|quarterly|trailing)
+   - **Example**: `/v1/markets/stock/modules?ticker=AAPL&module=income-statement&timeframe=annually`
+
+- **`/v1/markets/stock/analyst-ratings`** (`analyst_ratings`)
+   - **Required Parameters**:
+     - `ticker`: String - Stock ticker
    - **Optional Parameters**:
      - `page`: Integer - Page number for pagination
-     - `type`: String - Transaction type, one of: "Buy", "Sell", "Option Exercise", "Award", "Payment", "Conversion", "Other", "Transfer"
-   - **Example**: `/v1/stocks/insider?symbol=AAPL&type=Buy&page=1`
+   - **Example**: `/v1/markets/stock/analyst-ratings?ticker=AAPL&page=1`
+
+### v2 Endpoints
+- **`/v2/markets/stock/ticker-summary`** (`ticker_summary`)
+   - **Required Parameters**:
+     - `ticker`: String - Stock ticker
+     - `type`: String - Type of security (STOCKS|ETF|MUTUALFUNDS|FUTURES)
+   - **Optional Parameters**: None
+   - **Example**: `/v2/markets/stock/ticker-summary?ticker=AAPL&type=STOCKS`
+
+- **`/v2/markets/stock/price-targets`** (`price_targets`)
+   - **Required Parameters**:
+     - `ticker`: String - Stock ticker
+   - **Optional Parameters**: None
+   - **Example**: `/v2/markets/stock/price-targets?ticker=AAPL`
+
+- **`/v2/markets/stock/financials`** (`financials`)
+   - **Required Parameters**:
+     - `ticker`: String - Stock ticker
+   - **Optional Parameters**: None
+   - **Example**: `/v2/markets/stock/financials?ticker=AAPL`
+
+- **`/v2/markets/stock/revenue`** (`revenue`)
+   - **Required Parameters**:
+     - `ticker`: String - Stock ticker
+   - **Optional Parameters**:
+     - `page`: Integer - Page number for pagination
+   - **Example**: `/v2/markets/stock/revenue?ticker=AAPL&page=1`
+
+- **`/v2/markets/stock/short-interest`** (`short_interest`)
+   - **Required Parameters**:
+     - `ticker`: String - Stock ticker
+     - `type`: String - Type of security (STOCKS|ETF|MUTUALFUNDS|FUTURES)
+   - **Optional Parameters**: None
+   - **Example**: `/v2/markets/stock/short-interest?ticker=AAPL&type=STOCKS`
+
+- **`/v2/markets/stock/institutional-holdings`** (`institutional_holdings`)
+   - **Required Parameters**:
+     - `ticker`: String - Stock ticker
+     - `type`: String - Type of holding (TOTAL|INCREASED|NEW|DECREASED|SOLDOUT|ACTIVITY)
+   - **Optional Parameters**:
+     - `limit`: Integer - Limit number of results
+   - **Example**: `/v2/markets/stock/institutional-holdings?ticker=AAPL&type=TOTAL&limit=10`
+
+- **`/v2/markets/stock/sec-filings`** (`sec_filings`)
+   - **Required Parameters**:
+     - `ticker`: String - Stock ticker
+     - `type`: String - Type of filing (FORM-4|ALL)
+   - **Optional Parameters**:
+     - `limit`: Integer - Limit number of results
+   - **Example**: `/v2/markets/stock/sec-filings?ticker=AAPL&type=FORM-4&limit=10`
+
+- **`/v2/markets/stock/historical`** (`historical`)
+   - **Required Parameters**:
+     - `ticker`: String - Stock ticker
+     - `type`: String - Type of security (STOCKS|ETF|MUTUALFUNDS|FUTURES)
+   - **Optional Parameters**:
+     - `from_date`: String - Start date for historical data
+     - `to_date`: String - End date for historical data
+     - `limit`: Integer - Limit number of results
+   - **Example**: `/v2/markets/stock/historical?ticker=AAPL&type=STOCKS&from_date=2020-01-01&to_date=2020-12-31&limit=100`
+
+## Module Options
+The following modules are available for the `/v1/markets/stock/modules` endpoint:
+- profile
+- income-statement
+- balance-sheet
+- cashflow-statement
+- financial-data
+- statistics
+- ratios
+- calendar-events
+- sec-filings
+- recommendation-trend
+- upgrade-downgrade-history
+- insider-transactions
+- insider-holders
+- net-share-purchase-activity
+- earnings
+- index-trend
+- industry-trend
+- sector-trend
 
 ## Implementation Details
 
@@ -109,17 +145,19 @@ The main implementation function that processes requests for Mboum's stock data.
 The function maps shorthand endpoint names to actual API paths:
 ```javascript
 const endpointMap = {
-  quote: "/v1/quick-stats/quote",
-  profile: "/v1/stocks/profile",
-  summary: "/v1/stocks/summary",
-  balance_sheet: "/v1/stocks/balance-sheet",
-  cash_flow: "/v1/stocks/cash-flow",
-  income_statement: "/v1/stocks/income-statement",
-  historical: "/v1/stocks/historical",
-  recommendation: "/v1/stocks/recommendation",
-  key_statistics: "/v1/stocks/stats",
-  esg_data: "/v1/stocks/esg",
-  insider_transactions: "/v1/stocks/insider"
+  quote: "/v1/markets/quote",
+  stock_quotes: "/v1/markets/stock/quotes",
+  stock_history: "/v1/markets/stock/history",
+  stock_modules: "/v1/markets/stock/modules",
+  analyst_ratings: "/v1/markets/stock/analyst-ratings",
+  ticker_summary: "/v2/markets/stock/ticker-summary",
+  price_targets: "/v2/markets/stock/price-targets",
+  financials: "/v2/markets/stock/financials",
+  revenue: "/v2/markets/stock/revenue",
+  short_interest: "/v2/markets/stock/short-interest",
+  institutional_holdings: "/v2/markets/stock/institutional-holdings",
+  sec_filings: "/v2/markets/stock/sec-filings",
+  historical: "/v2/markets/stock/historical"
 };
 ```
 
@@ -167,8 +205,8 @@ const result = await mboum_stock_data({
   requestDetails: {
     endpoint: "quote",
     queryParams: {
-      symbol: "AAPL",
-      region: "US"
+      ticker: "AAPL",
+      type: "STOCKS"
     }
   }
 });
@@ -178,9 +216,10 @@ const result = await mboum_stock_data({
 ```javascript
 const result = await mboum_stock_data({
   requestDetails: {
-    endpoint: "profile",
+    endpoint: "stock_modules",
     queryParams: {
-      symbol: "AAPL"
+      ticker: "AAPL",
+      module: "profile"
     }
   }
 });
@@ -190,10 +229,11 @@ const result = await mboum_stock_data({
 ```javascript
 const result = await mboum_stock_data({
   requestDetails: {
-    endpoint: "income_statement",
+    endpoint: "stock_modules",
     queryParams: {
-      symbol: "AAPL",
-      period: "annual"
+      ticker: "AAPL",
+      module: "income-statement",
+      timeframe: "annual"
     }
   }
 });
@@ -203,12 +243,11 @@ const result = await mboum_stock_data({
 ```javascript
 const result = await mboum_stock_data({
   requestDetails: {
-    endpoint: "historical",
+    endpoint: "stock_history",
     queryParams: {
-      symbol: "AAPL",
+      ticker: "AAPL",
       interval: "1d",
-      range: "3mo",
-      events: true
+      diffandsplits: true
     }
   }
 });
@@ -218,9 +257,9 @@ const result = await mboum_stock_data({
 ```javascript
 const result = await mboum_stock_data({
   requestDetails: {
-    endpoint: "recommendation",
+    endpoint: "analyst_ratings",
     queryParams: {
-      symbol: "AAPL"
+      ticker: "AAPL"
     }
   }
 });
@@ -230,11 +269,10 @@ const result = await mboum_stock_data({
 ```javascript
 const result = await mboum_stock_data({
   requestDetails: {
-    endpoint: "insider_transactions",
+    endpoint: "stock_modules",
     queryParams: {
-      symbol: "AAPL",
-      type: "Buy",
-      page: 1
+      ticker: "AAPL",
+      module: "insider-transactions"
     }
   }
 });

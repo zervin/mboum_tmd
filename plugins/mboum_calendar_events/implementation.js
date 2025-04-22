@@ -20,7 +20,7 @@ async function mboum_calendar_events(params) {
     const endpointMap = {
       ipo: "/v1/markets/calendar/ipo",
       splits: "/v1/markets/calendar/splits",
-      economic: "/v1/markets/calendar/economic",
+      economic: "/v1/markets/calendar/economic_events",
       earnings: "/v2/markets/calendar/earnings",
       dividends: "/v2/markets/calendar/dividends"
     };
@@ -33,11 +33,11 @@ async function mboum_calendar_events(params) {
 
     // Define required parameters for each endpoint
     const requiredParamsMap = {
-      ipo: [],       // No required parameters
-      splits: [],    // No required parameters
-      economic: [],  // No required parameters
-      earnings: [],  // No required parameters, but requires either 'days' OR 'start_date'/'end_date'
-      dividends: []  // No required parameters, but requires either 'days' OR 'start_date'/'end_date'
+      ipo: [],
+      splits: [],
+      economic: [],
+      earnings: [],
+      dividends: []
     };
 
     // Define parameter validation rules based on Mboum API documentation
@@ -65,18 +65,22 @@ async function mboum_calendar_events(params) {
         },
         errorMsg: "must be a valid date in YYYY-MM-DD format"
       },
-      'date': {
+      date: {
         type: 'string',
         validate: (val) => {
-          // Check if it's a valid date in YYYY-MM-DD format
-          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+          const dateRegex = /^\d{4}-\d{2}(-\d{2})?$/;
           return dateRegex.test(val) && !isNaN(Date.parse(val));
         },
-        errorMsg: "must be a valid date in YYYY-MM-DD format"
+        errorMsg: "must be a valid date in YYYY-MM or YYYY-MM-DD format"
+      },
+      days: {
+        type: 'integer',
+        validate: (val) => Number.isInteger(Number(val)) && val > 0 && val <= 30,
+        errorMsg: "must be an integer between 1 and 30"
       },
       page: {
         type: 'integer',
-        validate: (val) => Number.isInteger(Number(val)) && Number(val) > 0,
+        validate: (val) => Number.isInteger(Number(val)) && val > 0,
         errorMsg: "must be a positive integer"
       },
       size: {
@@ -93,11 +97,6 @@ async function mboum_calendar_events(params) {
         type: 'string',
         validate: (val) => ['high', 'medium', 'low'].includes(val.toLowerCase()),
         errorMsg: "must be one of: 'high', 'medium', 'low'"
-      },
-      days: {
-        type: 'integer',
-        validate: (val) => Number.isInteger(Number(val)) && Number(val) > 0,
-        errorMsg: "must be a positive integer"
       },
       start_date: {
         type: 'string',
@@ -116,16 +115,26 @@ async function mboum_calendar_events(params) {
           return dateRegex.test(val) && !isNaN(Date.parse(val));
         },
         errorMsg: "must be a valid date in YYYY-MM-DD format"
+      },
+      price_min: {
+        type: 'string',
+        validate: (val) => !isNaN(Number(val)),
+        errorMsg: "must be a valid number"
+      },
+      optionable: {
+        type: 'string',
+        validate: (val) => ['true', 'false'].includes(val.toLowerCase()),
+        errorMsg: "must be either 'true' or 'false'"
       }
     };
 
     // Determine which parameters are applicable for each endpoint
     const applicableParams = {
-      ipo: ['from', 'to', 'page', 'size'],
-      splits: ['ticker', 'from', 'to', 'page', 'size'],
-      economic: ['country', 'from', 'to', 'importance', 'page', 'size'],
-      earnings: ['days', 'start_date', 'end_date', 'ticker', 'page', 'size'],
-      dividends: ['days', 'start_date', 'end_date', 'ticker', 'page', 'size']
+      ipo: ['date'],
+      splits: ['date'],
+      economic: ['date'],
+      earnings: ['days', 'start_date', 'end_date', 'price_min', 'optionable', 'page'],
+      dividends: ['date', 'page']
     };
 
     // Validate parameters
@@ -143,8 +152,8 @@ async function mboum_calendar_events(params) {
       }
     }
 
-    // Special validation for earnings and dividends endpoints that require either days OR start_date/end_date
-    if (endpoint === 'earnings' || endpoint === 'dividends') {
+    // Special validation for earnings endpoint that requires either days OR start_date/end_date
+    if (endpoint === 'earnings') {
       const hasDays = actualParams.hasOwnProperty('days') && actualParams.days !== undefined && actualParams.days !== null && actualParams.days !== '';
       const hasStartDate = actualParams.hasOwnProperty('start_date') && actualParams.start_date !== undefined && actualParams.start_date !== null && actualParams.start_date !== '';
       const hasEndDate = actualParams.hasOwnProperty('end_date') && actualParams.end_date !== undefined && actualParams.end_date !== null && actualParams.end_date !== '';

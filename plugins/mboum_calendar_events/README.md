@@ -13,57 +13,37 @@ This plugin provides access to Mboum's financial calendar events API, focusing o
 ## Endpoints
 This plugin supports the following Mboum API endpoints:
 
-1. **`/v2/markets/calendar/earnings`** (`earnings`)
-   - **Required Parameters**: None (but requires either `days` OR `start_date`/`end_date`)
+1. **`/v1/markets/calendar/ipo`** (`ipo`)
+   - **Optional Parameters**:
+     - `date`: String - Date (YYYY-MM format)
+   - **Example**: `/v1/markets/calendar/ipo?date=2023-01`
+
+2. **`/v1/markets/calendar/splits`** (`splits`)
+   - **Optional Parameters**:
+     - `date`: String - Date (YYYY-MM format)
+   - **Example**: `/v1/markets/calendar/splits?date=2023-01`
+
+3. **`/v1/markets/calendar/economic_events`** (`economic`)
+   - **Optional Parameters**:
+     - `date`: String - Date (YYYY-MM-DD format)
+   - **Example**: `/v1/markets/calendar/economic_events?date=2023-01-01`
+
+4. **`/v2/markets/calendar/earnings`** (`earnings`)
+   - **Required Parameters**: Either `days` OR `start_date`/`end_date`
    - **Optional Parameters**:
      - `days`: Integer - Number of days to look ahead for events
      - `start_date`: String - Start date (YYYY-MM-DD format)
      - `end_date`: String - End date (YYYY-MM-DD format)
-     - `ticker`: String - Stock symbol to filter events
+     - `price_min`: Integer - Minimum stock price
+     - `optionable`: Boolean - Filter by optionable stocks
      - `page`: Integer - Page number for pagination
-     - `size`: Integer - Number of results per page
-   - **Example**: `/v2/markets/calendar/earnings?days=7` or `/v2/markets/calendar/earnings?start_date=2023-01-01&end_date=2023-01-31&ticker=AAPL`
+   - **Example**: `/v2/markets/calendar/earnings?days=7` or `/v2/markets/calendar/earnings?start_date=2023-01-01&end_date=2023-01-31`
 
-2. **`/v1/markets/calendar/ipo`** (`ipo`)
-   - **Required Parameters**: None
+5. **`/v2/markets/calendar/dividends`** (`dividends`)
    - **Optional Parameters**:
-     - `from`: String - Start date (YYYY-MM-DD format)
-     - `to`: String - End date (YYYY-MM-DD format)
+     - `date`: String - Date (YYYY-MM-DD format)
      - `page`: Integer - Page number for pagination
-     - `size`: Integer - Number of results per page
-   - **Example**: `/v1/markets/calendar/ipo?from=2023-01-01&to=2023-12-31`
-
-3. **`/v1/markets/calendar/splits`** (`splits`)
-   - **Required Parameters**: None
-   - **Optional Parameters**:
-     - `ticker`: String - Stock symbol or comma-separated list of symbols
-     - `from`: String - Start date (YYYY-MM-DD format)
-     - `to`: String - End date (YYYY-MM-DD format)
-     - `page`: Integer - Page number for pagination
-     - `size`: Integer - Number of results per page
-   - **Example**: `/v1/markets/calendar/splits?from=2023-01-01&to=2023-12-31`
-
-4. **`/v2/markets/calendar/dividends`** (`dividends`)
-   - **Required Parameters**: None (but requires either `days` OR `start_date`/`end_date`)
-   - **Optional Parameters**:
-     - `days`: Integer - Number of days to look ahead for events
-     - `start_date`: String - Start date (YYYY-MM-DD format)
-     - `end_date`: String - End date (YYYY-MM-DD format)
-     - `ticker`: String - Stock symbol to filter events
-     - `page`: Integer - Page number for pagination
-     - `size`: Integer - Number of results per page
-   - **Example**: `/v2/markets/calendar/dividends?days=7` or `/v2/markets/calendar/dividends?start_date=2023-01-01&end_date=2023-01-31&ticker=AAPL`
-
-5. **`/v1/markets/calendar/economic`** (`economic`)
-   - **Required Parameters**: None
-   - **Optional Parameters**:
-     - `country`: String - Country code (e.g., 'US', 'GB')
-     - `from`: String - Start date (YYYY-MM-DD format)
-     - `to`: String - End date (YYYY-MM-DD format)
-     - `importance`: String - Event importance level, one of: "high", "medium", "low"
-     - `page`: Integer - Page number for pagination
-     - `size`: Integer - Number of results per page
-   - **Example**: `/v1/markets/calendar/economic?country=US&importance=high`
+   - **Example**: `/v2/markets/calendar/dividends?date=2023-01-01`
 
 ## Implementation Details
 
@@ -81,7 +61,7 @@ The function maps shorthand endpoint names to actual API paths:
 const endpointMap = {
   ipo: "/v1/markets/calendar/ipo",
   splits: "/v1/markets/calendar/splits",
-  economic: "/v1/markets/calendar/economic",
+  economic: "/v1/markets/calendar/economic_events",
   earnings: "/v2/markets/calendar/earnings",
   dividends: "/v2/markets/calendar/dividends"
 };
@@ -150,10 +130,7 @@ const result = await mboum_calendar_events({
   requestDetails: {
     endpoint: "ipo",
     queryParams: {
-      from: "2023-01-01",
-      to: "2023-06-30",
-      page: 1,
-      size: 20
+      date: "2023-01"
     }
   }
 });
@@ -165,8 +142,7 @@ const result = await mboum_calendar_events({
   requestDetails: {
     endpoint: "splits",
     queryParams: {
-      from: "2023-01-01",
-      to: "2023-12-31"
+      date: "2023-01"
     }
   }
 });
@@ -178,9 +154,7 @@ const result = await mboum_calendar_events({
   requestDetails: {
     endpoint: "dividends",
     queryParams: {
-      start_date: "2023-01-01",
-      end_date: "2023-01-31",
-      ticker: "AAPL"
+      date: "2023-01-01"
     }
   }
 });
@@ -192,10 +166,7 @@ const result = await mboum_calendar_events({
   requestDetails: {
     endpoint: "economic",
     queryParams: {
-      country: "US",
-      importance: "high",
-      from: "2023-01-01",
-      to: "2023-03-31"
+      date: "2023-01-01"
     }
   }
 });
