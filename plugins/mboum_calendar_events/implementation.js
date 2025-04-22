@@ -18,11 +18,11 @@ async function mboum_calendar_events(params) {
 
     // Define API endpoint paths
     const endpointMap = {
-      earnings: "/v1/calendar/earnings",
-      ipo: "/v1/calendar/ipo",
-      splits: "/v1/calendar/splits",
-      dividends: "/v1/calendar/dividends",
-      economic: "/v1/calendar/economic"
+      ipo: "/v1/markets/calendar/ipo",
+      splits: "/v1/markets/calendar/splits",
+      economic: "/v1/markets/calendar/economic",
+      earnings: "/v2/markets/calendar/earnings",
+      dividends: "/v2/markets/calendar/dividends"
     };
 
     // Get the API path for the specified endpoint
@@ -33,11 +33,11 @@ async function mboum_calendar_events(params) {
 
     // Define required parameters for each endpoint
     const requiredParamsMap = {
-      earnings: [],  // No required parameters
       ipo: [],       // No required parameters
       splits: [],    // No required parameters
-      dividends: [], // No required parameters
-      economic: []   // No required parameters
+      economic: [],  // No required parameters
+      earnings: [],  // No required parameters, but requires either 'days' OR 'start_date'/'end_date'
+      dividends: []  // No required parameters, but requires either 'days' OR 'start_date'/'end_date'
     };
 
     // Define parameter validation rules based on Mboum API documentation
@@ -93,16 +93,39 @@ async function mboum_calendar_events(params) {
         type: 'string',
         validate: (val) => ['high', 'medium', 'low'].includes(val.toLowerCase()),
         errorMsg: "must be one of: 'high', 'medium', 'low'"
+      },
+      days: {
+        type: 'integer',
+        validate: (val) => Number.isInteger(Number(val)) && Number(val) > 0,
+        errorMsg: "must be a positive integer"
+      },
+      start_date: {
+        type: 'string',
+        validate: (val) => {
+          // Check if it's a valid date in YYYY-MM-DD format
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+          return dateRegex.test(val) && !isNaN(Date.parse(val));
+        },
+        errorMsg: "must be a valid date in YYYY-MM-DD format"
+      },
+      end_date: {
+        type: 'string',
+        validate: (val) => {
+          // Check if it's a valid date in YYYY-MM-DD format
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+          return dateRegex.test(val) && !isNaN(Date.parse(val));
+        },
+        errorMsg: "must be a valid date in YYYY-MM-DD format"
       }
     };
 
     // Determine which parameters are applicable for each endpoint
     const applicableParams = {
-      earnings: ['ticker', 'from', 'to', 'date', 'page', 'size'],
       ipo: ['from', 'to', 'page', 'size'],
       splits: ['ticker', 'from', 'to', 'page', 'size'],
-      dividends: ['ticker', 'from', 'to', 'page', 'size'],
-      economic: ['country', 'from', 'to', 'importance', 'page', 'size']
+      economic: ['country', 'from', 'to', 'importance', 'page', 'size'],
+      earnings: ['days', 'start_date', 'end_date', 'ticker', 'page', 'size'],
+      dividends: ['days', 'start_date', 'end_date', 'ticker', 'page', 'size']
     };
 
     // Validate parameters
@@ -117,6 +140,17 @@ async function mboum_calendar_events(params) {
         missingParams.push(param);
       } else if (paramValidationMap[param] && !paramValidationMap[param].validate(actualParams[param])) {
         invalidParams.push(`'${param}' ${paramValidationMap[param].errorMsg}`);
+      }
+    }
+
+    // Special validation for earnings and dividends endpoints that require either days OR start_date/end_date
+    if (endpoint === 'earnings' || endpoint === 'dividends') {
+      const hasDays = actualParams.hasOwnProperty('days') && actualParams.days !== undefined && actualParams.days !== null && actualParams.days !== '';
+      const hasStartDate = actualParams.hasOwnProperty('start_date') && actualParams.start_date !== undefined && actualParams.start_date !== null && actualParams.start_date !== '';
+      const hasEndDate = actualParams.hasOwnProperty('end_date') && actualParams.end_date !== undefined && actualParams.end_date !== null && actualParams.end_date !== '';
+      
+      if (!hasDays && !(hasStartDate && hasEndDate)) {
+        invalidParams.push(`For '${endpoint}', either 'days' OR both 'start_date' and 'end_date' must be provided`);
       }
     }
 
@@ -202,27 +236,36 @@ async function mboum_calendar_events(params) {
       };
     }
 
-    // Parse and return the API response
+    // Parse the response
+    let data;
     try {
-      const jsonData = await response.json();
-      return jsonData;
-    } catch (jsonError) {
-      return { 
-        error: true, 
-        message: `Failed to parse MBOUM API response as JSON: ${jsonError.message}`,
+      data = await response.json();
+    } catch (parseError) {
+      return {
+        error: true,
+        message: `Failed to parse MBOUM API response: ${parseError.message}`,
         details: {
           url: url.toString().replace(apiKey, '[REDACTED]'),
-          errorType: 'PARSING'
+          errorType: 'PARSE'
         }
       };
     }
-  } catch (generalError) {
-    console.error("Unexpected error in mboum_calendar_events:", generalError);
-    return { 
-      error: true, 
-      message: `An unexpected error occurred: ${generalError.message}`,
+
+    // Return the successful response
+    return {
+      data,
+      meta: {
+        endpoint: apiPath,
+        params: Object.fromEntries(url.searchParams.entries())
+      }
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: `Unexpected error in MBOUM calendar events plugin: ${error.message}`,
       details: {
-        errorType: 'GENERAL'
+        errorType: 'UNEXPECTED',
+        stack: error.stack
       }
     };
   }
@@ -231,4 +274,9 @@ async function mboum_calendar_events(params) {
 // Export the function for browser environments
 if (typeof window !== 'undefined') {
   window.mboum_calendar_events = mboum_calendar_events;
+}
+
+// Export for Node.js environments
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = mboum_calendar_events;
 }

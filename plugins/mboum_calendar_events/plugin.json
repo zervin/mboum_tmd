@@ -38,12 +38,12 @@
                 },
                 "from": {
                   "type": "string",
-                  "description": "Start date for events in YYYY-MM-DD format",
+                  "description": "Start date for events in YYYY-MM-DD format (for ipo, splits, economic)",
                   "example": "2023-01-01"
                 },
                 "to": {
                   "type": "string",
-                  "description": "End date for events in YYYY-MM-DD format",
+                  "description": "End date for events in YYYY-MM-DD format (for ipo, splits, economic)",
                   "example": "2023-12-31"
                 },
                 "date": {
@@ -71,6 +71,21 @@
                   "description": "Importance level of economic events (applicable for economic endpoint)",
                   "enum": ["high", "medium", "low"],
                   "example": "high"
+                },
+                "days": {
+                  "type": "integer",
+                  "description": "Number of days to look ahead for events (applicable for earnings and dividends endpoints)",
+                  "example": 7
+                },
+                "start_date": {
+                  "type": "string",
+                  "description": "Start date for events in YYYY-MM-DD format (for earnings and dividends endpoints)",
+                  "example": "2023-01-01"
+                },
+                "end_date": {
+                  "type": "string",
+                  "description": "End date for events in YYYY-MM-DD format (for earnings and dividends endpoints)",
+                  "example": "2023-12-31"
                 }
               }
             }

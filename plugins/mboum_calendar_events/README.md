@@ -13,37 +13,27 @@ This plugin provides access to Mboum's financial calendar events API, focusing o
 ## Endpoints
 This plugin supports the following Mboum API endpoints:
 
-1. **`/v1/calendar/earnings`** (`earnings`)
-   - **Required Parameters**: None
+1. **`/v2/markets/calendar/earnings`** (`earnings`)
+   - **Required Parameters**: None (but requires either `days` OR `start_date`/`end_date`)
    - **Optional Parameters**:
-     - `ticker`: String - Stock symbol or comma-separated list of symbols
-     - `from`: String - Start date (YYYY-MM-DD format)
-     - `to`: String - End date (YYYY-MM-DD format)
-     - `date`: String - Specific date (YYYY-MM-DD format)
+     - `days`: Integer - Number of days to look ahead for events
+     - `start_date`: String - Start date (YYYY-MM-DD format)
+     - `end_date`: String - End date (YYYY-MM-DD format)
+     - `ticker`: String - Stock symbol to filter events
      - `page`: Integer - Page number for pagination
      - `size`: Integer - Number of results per page
-   - **Example**: `/v1/calendar/earnings?ticker=AAPL&from=2023-01-01&to=2023-12-31`
+   - **Example**: `/v2/markets/calendar/earnings?days=7` or `/v2/markets/calendar/earnings?start_date=2023-01-01&end_date=2023-01-31&ticker=AAPL`
 
-2. **`/v1/calendar/ipo`** (`ipo`)
+2. **`/v1/markets/calendar/ipo`** (`ipo`)
    - **Required Parameters**: None
    - **Optional Parameters**:
-     - `from`: String - Start date (YYYY-MM-DD format)
-     - `to`: String - End date (YYYY-MM-DD format)
-     - `page`: Integer - Page number for pagination
-     - `size`: Integer - Number of results per page
-   - **Example**: `/v1/calendar/ipo?from=2023-01-01&to=2023-12-31`
-
-3. **`/v1/calendar/splits`** (`splits`)
-   - **Required Parameters**: None
-   - **Optional Parameters**:
-     - `ticker`: String - Stock symbol or comma-separated list of symbols
      - `from`: String - Start date (YYYY-MM-DD format)
      - `to`: String - End date (YYYY-MM-DD format)
      - `page`: Integer - Page number for pagination
      - `size`: Integer - Number of results per page
-   - **Example**: `/v1/calendar/splits?from=2023-01-01&to=2023-12-31`
+   - **Example**: `/v1/markets/calendar/ipo?from=2023-01-01&to=2023-12-31`
 
-4. **`/v1/calendar/dividends`** (`dividends`)
+3. **`/v1/markets/calendar/splits`** (`splits`)
    - **Required Parameters**: None
    - **Optional Parameters**:
      - `ticker`: String - Stock symbol or comma-separated list of symbols
@@ -51,9 +41,20 @@ This plugin supports the following Mboum API endpoints:
      - `to`: String - End date (YYYY-MM-DD format)
      - `page`: Integer - Page number for pagination
      - `size`: Integer - Number of results per page
-   - **Example**: `/v1/calendar/dividends?ticker=AAPL&from=2023-01-01&to=2023-12-31`
+   - **Example**: `/v1/markets/calendar/splits?from=2023-01-01&to=2023-12-31`
 
-5. **`/v1/calendar/economic`** (`economic`)
+4. **`/v2/markets/calendar/dividends`** (`dividends`)
+   - **Required Parameters**: None (but requires either `days` OR `start_date`/`end_date`)
+   - **Optional Parameters**:
+     - `days`: Integer - Number of days to look ahead for events
+     - `start_date`: String - Start date (YYYY-MM-DD format)
+     - `end_date`: String - End date (YYYY-MM-DD format)
+     - `ticker`: String - Stock symbol to filter events
+     - `page`: Integer - Page number for pagination
+     - `size`: Integer - Number of results per page
+   - **Example**: `/v2/markets/calendar/dividends?days=7` or `/v2/markets/calendar/dividends?start_date=2023-01-01&end_date=2023-01-31&ticker=AAPL`
+
+5. **`/v1/markets/calendar/economic`** (`economic`)
    - **Required Parameters**: None
    - **Optional Parameters**:
      - `country`: String - Country code (e.g., 'US', 'GB')
@@ -62,7 +63,7 @@ This plugin supports the following Mboum API endpoints:
      - `importance`: String - Event importance level, one of: "high", "medium", "low"
      - `page`: Integer - Page number for pagination
      - `size`: Integer - Number of results per page
-   - **Example**: `/v1/calendar/economic?country=US&importance=high`
+   - **Example**: `/v1/markets/calendar/economic?country=US&importance=high`
 
 ## Implementation Details
 
@@ -78,11 +79,11 @@ The main implementation function that processes requests for Mboum's calendar ev
 The function maps shorthand endpoint names to actual API paths:
 ```javascript
 const endpointMap = {
-  earnings: "/v1/calendar/earnings",
-  ipo: "/v1/calendar/ipo",
-  splits: "/v1/calendar/splits",
-  dividends: "/v1/calendar/dividends",
-  economic: "/v1/calendar/economic"
+  ipo: "/v1/markets/calendar/ipo",
+  splits: "/v1/markets/calendar/splits",
+  economic: "/v1/markets/calendar/economic",
+  earnings: "/v2/markets/calendar/earnings",
+  dividends: "/v2/markets/calendar/dividends"
 };
 ```
 
@@ -95,6 +96,7 @@ The implementation includes comprehensive validation for all parameters:
 4. **Numeric Validation**: Confirms that numeric parameters are valid integers or numbers.
 5. **Enumeration Validation**: Checks that parameters with specific allowed values match the allowed options.
 6. **Applicability Validation**: Validates that only relevant parameters for the selected endpoint are provided.
+7. **Special Validation**: For earnings and dividends endpoints, validates that either `days` OR both `start_date` and `end_date` are provided.
 
 For example, validation for the `date` parameter:
 ```javascript
@@ -126,18 +128,17 @@ Each error includes detailed information to help with debugging.
 3. **Symbol Formatting**: For multiple symbols, use comma-separated values without spaces
 4. **Error Details**: Check error messages for specific validation issues
 5. **Time Ranges**: Make sure `from` dates are before `to` dates for valid ranges
+6. **Earnings & Dividends Endpoints**: Either provide `days` OR both `start_date` and `end_date`
 
 ## Example Usage
 
-### Upcoming Earnings for a Specific Company
+### Upcoming Earnings
 ```javascript
 const result = await mboum_calendar_events({
   requestDetails: {
     endpoint: "earnings",
     queryParams: {
-      ticker: "AAPL",
-      from: "2023-01-01",
-      to: "2023-12-31"
+      days: 7
     }
   }
 });
@@ -171,15 +172,15 @@ const result = await mboum_calendar_events({
 });
 ```
 
-### Dividend Calendar for Multiple Stocks
+### Dividend Calendar for a Specific Company
 ```javascript
 const result = await mboum_calendar_events({
   requestDetails: {
     endpoint: "dividends",
     queryParams: {
-      ticker: "AAPL,MSFT,JNJ",
-      from: "2023-01-01",
-      to: "2023-12-31"
+      start_date: "2023-01-01",
+      end_date: "2023-01-31",
+      ticker: "AAPL"
     }
   }
 });
@@ -198,8 +199,3 @@ const result = await mboum_calendar_events({
     }
   }
 });
-```
-
-## Related Documentation
-- [Mboum API Documentation](https://mboum.com/api/documentation)
-- [Development Plan](../../development_plan.md)
