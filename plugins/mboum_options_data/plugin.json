@@ -6,7 +6,7 @@
   "title": "MBOUM Options Data",
   "openaiSpec": {
     "name": "mboum_options_data",
-    "description": "Access MBOUM's options data API for options chains, unusual options activity, implied volatility metrics, and options flow. This plugin focuses exclusively on stock options data rather than underlying equity information. Use this plugin for questions about options chains, expiration dates, unusual options activity, implied volatility changes, or options flow data for specific stocks or market segments.",
+    "description": "Access MBOUM's options data API for detailed information on stock options, including option chains, expiration dates, strike prices, and options analytics. Use this plugin when you need specific information about options trading rather than general stock data.",
     "parameters": {
       "type": "object",
       "required": [
@@ -26,13 +26,9 @@
               "description": "The specific Mboum API endpoint for options data. Select the most appropriate endpoint based on the user's request.",
               "enum": [
                 "options",
-                "unusual_options_activity",
-                "iv_rank_percentile",
-                "iv_change",
-                "most_active",
-                "highest_iv",
-                "options_flow",
-                "options_v2"
+                "options_v2",
+                "options_expiration_dates",
+                "options_chain"
               ]
             },
             "queryParams": {
@@ -41,67 +37,34 @@
               "properties": {
                 "ticker": {
                   "type": "string",
-                  "description": "Stock symbol for options data (required for 'options' and 'options_v2' endpoints).",
+                  "description": "Stock symbol (required for all endpoints).",
                   "example": "AAPL"
-                },
-                "type": {
-                  "type": "string",
-                  "description": "Asset type filter (required for 'unusual_options_activity', 'iv_rank_percentile', 'iv_change', 'most_active', 'options_flow', and 'options_v2' endpoints).",
-                  "enum": ["STOCKS", "ETFS", "INDICES"],
-                  "example": "STOCKS"
-                },
-                "sort": {
-                  "type": "string",
-                  "description": "Sort order (required for 'highest_iv' endpoint).",
-                  "enum": ["HIGHEST", "LOWEST"],
-                  "example": "HIGHEST"
-                },
-                "expiration": {
-                  "type": "integer", 
-                  "description": "Options expiration date as Unix timestamp (optional for 'options' endpoint).",
-                  "example": 1734652800
-                },
-                "display": {
-                  "type": "string",
-                  "description": "Display format for options data (optional for 'options' endpoint).",
-                  "enum": ["list", "straddle"],
-                  "example": "straddle"
                 },
                 "date": {
                   "type": "string",
-                  "description": "Date filter in YYYY-MM-DD format (optional for 'unusual_options_activity' endpoint).",
+                  "description": "Expiration date in YYYY-MM-DD format (required for 'options' and 'options_chain' endpoints).",
                   "example": "2023-12-15"
                 },
-                "price_min": {
+                "strike": {
                   "type": "string",
-                  "description": "Minimum price filter (optional for 'unusual_options_activity', 'iv_rank_percentile', and 'iv_change' endpoints).",
-                  "example": "50"
+                  "description": "Strike price for specific option (optional for 'options_chain' endpoint).",
+                  "example": "180"
                 },
-                "direction": {
+                "type": {
                   "type": "string",
-                  "description": "Direction filter for IV change (optional for 'iv_change' endpoint).",
-                  "enum": ["UP", "DOWN"],
-                  "example": "UP"
+                  "description": "Option type (required for some endpoints).",
+                  "enum": ["call", "put"],
+                  "example": "call"
                 },
-                "page": {
-                  "type": "integer",
-                  "description": "Page number for paginated results (optional for 'unusual_options_activity', 'iv_rank_percentile', 'iv_change', 'most_active', 'highest_iv', and 'options_flow' endpoints).",
-                  "example": 1
+                "greeks": {
+                  "type": "boolean",
+                  "description": "Include Greeks calculations in the response (optional for 'options' endpoint).",
+                  "example": true
                 },
-                "from_date": {
-                  "type": "string",
-                  "description": "Start date in YYYY-MM-DD format (optional for 'options_v2' endpoint).",
-                  "example": "2023-01-01"
-                },
-                "to_date": {
-                  "type": "string",
-                  "description": "End date in YYYY-MM-DD format (optional for 'options_v2' endpoint).",
-                  "example": "2023-12-31"
-                },
-                "limit": {
-                  "type": "integer",
-                  "description": "Limit number of results (optional for 'options_v2' endpoint).",
-                  "example": 50
+                "allExpDates": {
+                  "type": "boolean",
+                  "description": "Return all expiration dates (optional for 'options_expiration_dates' endpoint).",
+                  "example": true
                 }
               }
             }

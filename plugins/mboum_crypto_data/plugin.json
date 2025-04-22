@@ -1,124 +1,84 @@
 {
-  "schema_version": "v1",
-  "name_for_human": "Mboum Crypto Data",
-  "name_for_model": "mboum_crypto_data",
-  "description_for_human": "Access cryptocurrency market data from Mboum API, including market summaries, quotes, trends, and historical prices.",
-  "description_for_model": "This plugin provides access to the Mboum API's cryptocurrency data endpoints, allowing you to retrieve cryptocurrency market summaries, quotes, trends, currency lists, and historical pricing data.",
-  "auth": {
-    "type": "none"
-  },
-  "api": {
-    "type": "openapi",
-    "url": "https://example.com/mboum_crypto_data_openapi.json",
-    "has_user_authentication": false,
-    "endpoints": [
-      {
-        "name": "mboum_crypto_data",
-        "description": "Provides access to cryptocurrency data from Mboum API including market summaries, quotes, trending coins, and historical pricing."
-      }
-    ],
-    "base_url": "https://api.mboum.com"
-  },
-  "spec": {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Mboum Crypto Data API",
-      "description": "Access cryptocurrency market data from Mboum API",
-      "version": "v1.0"
-    },
-    "paths": {
-      "/mboum_crypto_data": {
-        "post": {
-          "summary": "Get cryptocurrency data from Mboum API",
-          "operationId": "mboum_crypto_data",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MboumCryptoDataRequest"
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response with cryptocurrency data",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "components": {
-      "schemas": {
-        "MboumCryptoDataRequest": {
+  "version": 1,
+  "uuid": "mboum-crypto-data",
+  "iconURL": "https://www.linology.com/images/market_core.png",
+  "emoji": "🪙",
+  "title": "MBOUM Crypto Data",
+  "openaiSpec": {
+    "name": "mboum_crypto_data",
+    "description": "Access MBOUM's cryptocurrency data API for detailed information on cryptocurrencies, including quotes, historical data, market stats, and exchange information. Use this plugin when you need specific information about cryptocurrencies rather than traditional stocks.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "requestDetails"
+      ],
+      "properties": {
+        "requestDetails": {
           "type": "object",
-          "required": ["requestDetails"],
+          "description": "An object containing the target Mboum cryptocurrency data endpoint and its specific parameters.",
+          "required": [
+            "endpoint",
+            "queryParams"
+          ],
           "properties": {
-            "requestDetails": {
+            "endpoint": {
+              "type": "string",
+              "description": "The specific Mboum API endpoint for cryptocurrency data. Select the most appropriate endpoint based on the user's request.",
+              "enum": [
+                "crypto_quote",
+                "crypto_history",
+                "crypto_global",
+                "crypto_exchanges",
+                "crypto_markets",
+                "crypto_quote_v2",
+                "crypto_history_v2"
+              ]
+            },
+            "queryParams": {
               "type": "object",
-              "required": ["endpoint"],
+              "description": "Parameters required for the selected endpoint. Different endpoints need different parameters.",
               "properties": {
-                "endpoint": {
+                "symbol": {
                   "type": "string",
-                  "description": "The specific cryptocurrency data endpoint to query",
-                  "enum": ["summary", "trending", "currencies", "quotes", "historical"],
-                  "example": "quotes"
+                  "description": "Cryptocurrency symbol (required for 'crypto_quote', 'crypto_history', 'crypto_quote_v2', and 'crypto_history_v2' endpoints).",
+                  "example": "BTC-USD"
                 },
-                "queryParams": {
-                  "type": "object",
-                  "description": "Parameters for the chosen endpoint",
-                  "properties": {
-                    "symbol": {
-                      "type": "string",
-                      "description": "Cryptocurrency symbol (e.g., 'BTC-USD', 'ETH-USD') - required for quotes and historical endpoints",
-                      "example": "BTC-USD"
-                    },
-                    "region": {
-                      "type": "string",
-                      "description": "Region code for localized data",
-                      "example": "US"
-                    },
-                    "lang": {
-                      "type": "string",
-                      "description": "Language code for localized data",
-                      "example": "en"
-                    },
-                    "interval": {
-                      "type": "string",
-                      "description": "Time interval for historical data - required for historical endpoint",
-                      "enum": ["1d", "1wk", "1mo", "3mo"],
-                      "example": "1d"
-                    },
-                    "range": {
-                      "type": "string",
-                      "description": "Time range for historical data",
-                      "enum": ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"],
-                      "example": "1mo"
-                    },
-                    "page": {
-                      "type": "integer",
-                      "description": "Page number for paginated results (starting from 1)",
-                      "example": 1
-                    },
-                    "pageSize": {
-                      "type": "integer",
-                      "description": "Number of results per page (max 100)",
-                      "example": 25
-                    },
-                    "currency": {
-                      "type": "string",
-                      "description": "Base currency for conversion (e.g., 'USD', 'EUR')",
-                      "example": "USD"
-                    }
-                  }
+                "period": {
+                  "type": "string",
+                  "description": "Time period for historical data (required for 'crypto_history' and 'crypto_history_v2' endpoints).",
+                  "enum": ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"],
+                  "example": "1y"
+                },
+                "interval": {
+                  "type": "string",
+                  "description": "Time interval for historical data (required for 'crypto_history' and 'crypto_history_v2' endpoints).",
+                  "enum": ["1m", "2m", "5m", "15m", "30m", "60m", "90m", "1h", "1d", "5d", "1wk", "1mo", "3mo"],
+                  "example": "1d"
+                },
+                "start": {
+                  "type": "string",
+                  "description": "Start date for historical data in YYYY-MM-DD format (optional for 'crypto_history' and 'crypto_history_v2' endpoints).",
+                  "example": "2022-01-01"
+                },
+                "end": {
+                  "type": "string",
+                  "description": "End date for historical data in YYYY-MM-DD format (optional for 'crypto_history' and 'crypto_history_v2' endpoints).",
+                  "example": "2022-12-31"
+                },
+                "exchange": {
+                  "type": "string",
+                  "description": "Specific exchange to filter data (optional for 'crypto_markets' endpoint).",
+                  "example": "binance"
+                },
+                "limit": {
+                  "type": "integer",
+                  "description": "Limit number of results (optional for 'crypto_exchanges' and 'crypto_markets' endpoints).",
+                  "example": 50
+                },
+                "page": {
+                  "type": "integer",
+                  "description": "Page number for paginated results (optional for 'crypto_exchanges' and 'crypto_markets' endpoints).",
+                  "example": 1
                 }
               }
             }
@@ -126,5 +86,8 @@
         }
       }
     }
-  }
+  },
+  "implementationType": "javascript",
+  "id": "mboum_crypto_data",
+  "method": "GET"
 }

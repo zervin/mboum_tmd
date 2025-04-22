@@ -1,123 +1,76 @@
 {
-  "schema_version": "v1",
-  "name_for_human": "Mboum Calendar Events",
-  "name_for_model": "mboum_calendar_events",
-  "description_for_human": "Access financial event calendar data from Mboum API, including earnings, IPOs, splits, dividends, and economic events.",
-  "description_for_model": "This plugin provides access to the Mboum API's calendar events endpoints, allowing you to retrieve data about upcoming and past financial events. It supports earnings calendars, IPO calendars, stock splits, dividend payments, and economic event data.",
-  "auth": {
-    "type": "none"
-  },
-  "api": {
-    "type": "openapi",
-    "url": "https://example.com/mboum_calendar_events_openapi.json",
-    "has_user_authentication": false,
-    "endpoints": [
-      {
-        "name": "mboum_calendar_events",
-        "description": "Provides access to various calendar event data from Mboum API including earnings announcements, dividend schedules, IPOs, stock splits, and economic events."
-      }
-    ],
-    "base_url": "https://api.mboum.com"
-  },
-  "spec": {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Mboum Calendar Events API",
-      "description": "Access financial event calendar data from Mboum API",
-      "version": "v1.0"
-    },
-    "paths": {
-      "/mboum_calendar_events": {
-        "post": {
-          "summary": "Get calendar event data from Mboum API",
-          "operationId": "mboum_calendar_events",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MboumCalendarEventsRequest"
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Successful response with calendar event data",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "components": {
-      "schemas": {
-        "MboumCalendarEventsRequest": {
+  "version": 1,
+  "uuid": "mboum-calendar-events",
+  "iconURL": "https://www.linology.com/images/market_core.png",
+  "emoji": "📅",
+  "title": "MBOUM Calendar Events",
+  "openaiSpec": {
+    "name": "mboum_calendar_events",
+    "description": "Access Mboum's financial calendar events API, focusing on time-sensitive financial events such as earnings announcements, IPOs, stock splits, dividend payments, and economic events. This plugin provides data about upcoming and past financial events to help with investment planning and market analysis.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "requestDetails"
+      ],
+      "properties": {
+        "requestDetails": {
           "type": "object",
-          "required": ["requestDetails"],
+          "description": "An object containing the target Mboum calendar events endpoint and its specific parameters.",
+          "required": [
+            "endpoint",
+            "queryParams"
+          ],
           "properties": {
-            "requestDetails": {
+            "endpoint": {
+              "type": "string",
+              "description": "The specific calendar events endpoint to query",
+              "enum": ["earnings", "ipo", "splits", "dividends", "economic"],
+              "example": "earnings"
+            },
+            "queryParams": {
               "type": "object",
-              "required": ["endpoint"],
+              "description": "Parameters for the chosen endpoint",
               "properties": {
-                "endpoint": {
+                "ticker": {
                   "type": "string",
-                  "description": "The specific calendar events endpoint to query",
-                  "enum": ["earnings", "ipo", "splits", "dividends", "economic"],
-                  "example": "earnings"
+                  "description": "Stock symbol or comma-separated list of symbols to filter events (applicable for earnings, splits, dividends)",
+                  "example": "AAPL"
                 },
-                "queryParams": {
-                  "type": "object",
-                  "description": "Parameters for the chosen endpoint",
-                  "properties": {
-                    "ticker": {
-                      "type": "string",
-                      "description": "Stock symbol or comma-separated list of symbols to filter events (applicable for earnings, splits, dividends)",
-                      "example": "AAPL"
-                    },
-                    "from": {
-                      "type": "string",
-                      "description": "Start date for events in YYYY-MM-DD format",
-                      "example": "2023-01-01"
-                    },
-                    "to": {
-                      "type": "string",
-                      "description": "End date for events in YYYY-MM-DD format",
-                      "example": "2023-12-31"
-                    },
-                    "date": {
-                      "type": "string",
-                      "description": "Specific date for events in YYYY-MM-DD format (alternative to from/to range)",
-                      "example": "2023-06-15"
-                    },
-                    "page": {
-                      "type": "integer",
-                      "description": "Page number for paginated results (starting from 1)",
-                      "example": 1
-                    },
-                    "size": {
-                      "type": "integer",
-                      "description": "Number of results per page",
-                      "example": 50
-                    },
-                    "country": {
-                      "type": "string",
-                      "description": "Country code to filter economic events (applicable for economic endpoint)",
-                      "example": "US"
-                    },
-                    "importance": {
-                      "type": "string",
-                      "description": "Importance level of economic events (applicable for economic endpoint)",
-                      "enum": ["high", "medium", "low"],
-                      "example": "high"
-                    }
-                  }
+                "from": {
+                  "type": "string",
+                  "description": "Start date for events in YYYY-MM-DD format",
+                  "example": "2023-01-01"
+                },
+                "to": {
+                  "type": "string",
+                  "description": "End date for events in YYYY-MM-DD format",
+                  "example": "2023-12-31"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "Specific date for events in YYYY-MM-DD format (alternative to from/to range)",
+                  "example": "2023-06-15"
+                },
+                "page": {
+                  "type": "integer",
+                  "description": "Page number for paginated results (starting from 1)",
+                  "example": 1
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "Number of results per page",
+                  "example": 50
+                },
+                "country": {
+                  "type": "string",
+                  "description": "Country code to filter economic events (applicable for economic endpoint)",
+                  "example": "US"
+                },
+                "importance": {
+                  "type": "string",
+                  "description": "Importance level of economic events (applicable for economic endpoint)",
+                  "enum": ["high", "medium", "low"],
+                  "example": "high"
                 }
               }
             }
@@ -125,5 +78,8 @@
         }
       }
     }
-  }
+  },
+  "implementationType": "javascript",
+  "id": "mboum_calendar_events",
+  "method": "GET"
 }
