@@ -1,0 +1,130 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Mboum Crypto Data",
+  "name_for_model": "mboum_crypto_data",
+  "description_for_human": "Access cryptocurrency market data from Mboum API, including market summaries, quotes, trends, and historical prices.",
+  "description_for_model": "This plugin provides access to the Mboum API's cryptocurrency data endpoints, allowing you to retrieve cryptocurrency market summaries, quotes, trends, currency lists, and historical pricing data.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://example.com/mboum_crypto_data_openapi.json",
+    "has_user_authentication": false,
+    "endpoints": [
+      {
+        "name": "mboum_crypto_data",
+        "description": "Provides access to cryptocurrency data from Mboum API including market summaries, quotes, trending coins, and historical pricing."
+      }
+    ],
+    "base_url": "https://api.mboum.com"
+  },
+  "spec": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Mboum Crypto Data API",
+      "description": "Access cryptocurrency market data from Mboum API",
+      "version": "v1.0"
+    },
+    "paths": {
+      "/mboum_crypto_data": {
+        "post": {
+          "summary": "Get cryptocurrency data from Mboum API",
+          "operationId": "mboum_crypto_data",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MboumCryptoDataRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful response with cryptocurrency data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "MboumCryptoDataRequest": {
+          "type": "object",
+          "required": ["requestDetails"],
+          "properties": {
+            "requestDetails": {
+              "type": "object",
+              "required": ["endpoint"],
+              "properties": {
+                "endpoint": {
+                  "type": "string",
+                  "description": "The specific cryptocurrency data endpoint to query",
+                  "enum": ["summary", "trending", "currencies", "quotes", "historical"],
+                  "example": "quotes"
+                },
+                "queryParams": {
+                  "type": "object",
+                  "description": "Parameters for the chosen endpoint",
+                  "properties": {
+                    "symbol": {
+                      "type": "string",
+                      "description": "Cryptocurrency symbol (e.g., 'BTC-USD', 'ETH-USD') - required for quotes and historical endpoints",
+                      "example": "BTC-USD"
+                    },
+                    "region": {
+                      "type": "string",
+                      "description": "Region code for localized data",
+                      "example": "US"
+                    },
+                    "lang": {
+                      "type": "string",
+                      "description": "Language code for localized data",
+                      "example": "en"
+                    },
+                    "interval": {
+                      "type": "string",
+                      "description": "Time interval for historical data - required for historical endpoint",
+                      "enum": ["1d", "1wk", "1mo", "3mo"],
+                      "example": "1d"
+                    },
+                    "range": {
+                      "type": "string",
+                      "description": "Time range for historical data",
+                      "enum": ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "10y", "ytd", "max"],
+                      "example": "1mo"
+                    },
+                    "page": {
+                      "type": "integer",
+                      "description": "Page number for paginated results (starting from 1)",
+                      "example": 1
+                    },
+                    "pageSize": {
+                      "type": "integer",
+                      "description": "Number of results per page (max 100)",
+                      "example": 25
+                    },
+                    "currency": {
+                      "type": "string",
+                      "description": "Base currency for conversion (e.g., 'USD', 'EUR')",
+                      "example": "USD"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "uuid": "mboum-general-data",
+  "iconURL": "https://www.linology.com/images/market_core.png",
+  "emoji": "📊",
+  "title": "MBOUM General Market Data",
+  "openaiSpec": {
+    "name": "mboum_general_data",
+    "description": "Access MBOUM's general market data API for market-wide information, searches, market movers, news, and screeners. Use this plugin for broad market inquiries like searching for symbols, finding top market movers, accessing market news, or using market screeners - rather than detailed analysis of specific stocks.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "requestDetails"
+      ],
+      "properties": {
+        "requestDetails": {
+          "type": "object",
+          "description": "An object containing the target Mboum general market data endpoint and its specific parameters.",
+          "required": [
+            "endpoint",
+            "queryParams"
+          ],
+          "properties": {
+            "endpoint": {
+              "type": "string",
+              "description": "The specific Mboum API endpoint for general market data. Select the most appropriate endpoint based on the user's request.",
+              "enum": [
+                "search",
+                "movers",
+                "screener",
+                "insider_trades",
+                "news",
+                "search_v2",
+                "movers_v2",
+                "tickers",
+                "market_info",
+                "screener_v2",
+                "news_v2"
+              ]
+            },
+            "queryParams": {
+              "type": "object",
+              "description": "Parameters required for the selected endpoint. Different endpoints need different parameters.",
+              "properties": {
+                "search": {
+                  "type": "string",
+                  "description": "Search query (required for 'search' and 'search_v2' endpoints).",
+                  "example": "AAPL"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Type filter (required for 'movers' and 'tickers' endpoints).",
+                  "example": "STOCKS"
+                },
+                "ticker": {
+                  "type": "string",
+                  "description": "Stock symbol(s) to filter results (optional for 'news' and 'news_v2' endpoints).",
+                  "example": "AAPL,MSFT"
+                },
+                "list": {
+                  "type": "string",
+                  "description": "List to screen (required for 'screener' endpoint).",
+                  "enum": ["trending", "undervalued_growth_stocks", "growth_technology_stocks", "day_gainers", "day_losers", "most_actives", "undervalued_large_caps", "aggressive_small_caps", "small_cap_gainers"],
+                  "example": "day_gainers"
+                },
+                "offset": {
+                  "type": "integer",
+                  "description": "Offset for pagination (optional for 'screener' endpoint).",
+                  "example": 19
+                },
+                "minValue": {
+                  "type": "string",
+                  "description": "Minimum transaction value (optional for 'insider_trades' endpoint).",
+                  "example": "10000"
+                },
+                "politiciansOnly": {
+                  "type": "string",
+                  "description": "Filter for politician trades only (optional for 'insider_trades' endpoint).",
+                  "enum": ["true", "false"],
+                  "example": "true"
+                },
+                "page": {
+                  "type": "integer",
+                  "description": "Page number for pagination (optional for multiple endpoints).",
+                  "example": 1
+                },
+                "change_type": {
+                  "type": "string",
+                  "description": "Type of change to track (required for 'movers_v2' endpoint).",
+                  "enum": ["PERCENT", "PRICE", "GAP"],
+                  "example": "PERCENT"
+                },
+                "direction": {
+                  "type": "string",
+                  "description": "Direction filter (optional for 'movers_v2' endpoint).",
+                  "enum": ["UP", "DOWN"],
+                  "example": "UP"
+                },
+                "price_min": {
+                  "type": "string",
+                  "description": "Minimum price filter (optional for 'movers_v2' endpoint).",
+                  "example": "10"
+                },
+                "metricType": {
+                  "type": "string",
+                  "description": "Type of metric for screening (required for 'screener_v2' endpoint).",
+                  "enum": ["overview", "technical", "performance", "fundamental"],
+                  "example": "overview"
+                },
+                "filter": {
+                  "type": "string",
+                  "description": "Filter criteria for screening (required for 'screener_v2' endpoint).",
+                  "enum": ["high_volume", "hot_stocks", "top_under_10", "dividend", "top_fundamentals", "top_tech", "j_pattern", "golden_cross", "death_cross", "consolidation", "rsi_overbought", "rsi_oversold", "52wk_toppicks", "penny_gap", "defensive_stock", "income_growth", "buy_longterm", "sell_growth"],
+                  "example": "high_volume"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "implementationType": "javascript",
+  "id": "mboum_general_data",
+  "method": "GET"
+}
